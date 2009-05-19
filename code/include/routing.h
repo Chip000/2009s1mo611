@@ -11,6 +11,8 @@
 #include <string.h>
 #include <float.h>
 #include "../include/shortest_path.h"
+#include "../include/struct_route.h"
+
 
 
 #endif 
