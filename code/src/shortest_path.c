@@ -55,7 +55,6 @@ static int min_dist_vertex(float *dist, int n, int *visited)
  *   - Vertice origem
  * Saida:
  *   - Vetor com as distancias
- *   - Custo do caminho mais curto
  */
 void shortest_path(float **G, int n, int s, float **dist)
 {

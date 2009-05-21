@@ -30,9 +30,15 @@ struct route *create_struct_route(void);
 
 /*
  * insert_new_edge: Insere a aresta na rota P
- * retorna 0 se ocorreu a insercao e 0 cc
+ * retorna 0 se ocorreu a insercao e 1 cc
  */
 int insert_new_edge(struct route *P, int i, int j, float c);
+
+/*
+ * in_path: Verifica se o vertice u ja esta no caminho
+ * retorna 0 caso u nao esta no caminho e 1 cc
+ */
+int in_path(struct route *P, int u);
 
 /*
  * print_route_path: Imprime a rota de s a t no arquivo especificado

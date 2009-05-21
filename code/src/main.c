@@ -17,11 +17,19 @@
 void display_help(void)
 {
 	fprintf(stderr, 
-		"USAGE: ./%s (topologia) (demanda) \n",
+		"USAGE: ./%s (penalidade) (topologia) (demanda)",
 		TARGET);
+	fprintf(stderr, " (grafo_aux) (output)\n");
+	fprintf(stderr, "penalidade: multiplicador que ira penalizar");
+	fprintf(stderr, " a rota de acordo com a qtde de arestas");
+	fprintf(stderr, " usadas na triangulação\n");
 	fprintf(stderr, "topologia: Arquivo de topologia da rede");
 	fprintf(stderr, " a ser analisado\n");
 	fprintf(stderr, "demanda: caminhos que serao gerados\n");
+	fprintf(stderr, "grafo_aux: Arquivo que contem o grafo");
+	fprintf(stderr, " auxiliar para a topologia dada\n");
+	fprintf(stderr, "output: Arquivo de saida contendo os lpaths");
+	fprintf(stderr, "\n");
  
 	return;
 }
@@ -30,19 +38,27 @@ int main(int argc, char **argv) {
 
 	struct graph G;
 	struct request req;
+/* 	struct graph_aux G_aux; */
 
 	char *file_top;
 	char *file_req;
+	char *file_gaux;
+	char *file_out;
 
-	if (argc < 2) {
+	float a;
+
+	if (argc < 5) {
 		fprintf(stderr, ">>>ERROR: ");
 		fprintf(stderr, "Numero de parametros invalido!!\n");
 		display_help();
 		return 1;
 	}
 
-	file_top = argv[1];
-	file_req = argv[2];
+	a = (float) atof(argv[1]);
+	file_top = argv[2];
+	file_req = argv[3];
+	file_gaux = argv[4];
+	file_out = argv[5];
 
 	/* Carregando a topologia na memoria */
 	if (graph_parser(file_top, &G) != 0) {
@@ -55,6 +71,7 @@ int main(int argc, char **argv) {
 		print_graph(G);
 	}
 
+	/* Carregando as demandas na memoria */
 	if (request_parser(file_req, &req) != 0) {
 		fprintf(stderr, ">>>ERROR: ");
 		fprintf(stderr, "Arquivo de demanda invalido!!\n");
@@ -65,9 +82,21 @@ int main(int argc, char **argv) {
 		print_request(req);
 	}
 
+	/* Carregando o grafo auxiliar na memoria */
+/* 	if (graph_aux_parser(file_top, &G_aux) != 0) { */
+/* 		fprintf(stderr, ">>>ERROR: "); */
+/* 		fprintf(stderr, "Arquivo do grafo auxiliar invalido!!\n"); */
+/* 		return 1; */
+/* 	} */
+
+/* 	if (DEBUG == 1) { */
+/* 		print_graph_aux(G_aux); */
+/* 	} */
+
 	/* Liberando memoria */
 	free_graph(G);
 	free_request(req);
+/* 	free_graph_aux(G_aux); */
 
 	return 0;
 

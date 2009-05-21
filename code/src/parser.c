@@ -70,6 +70,7 @@ int request_parser(const char *filename, struct request *r)
 	int s = 0;
 	int t = 0;
 	int n = 0;
+	char type;
 	
 	FILE *file;
 
@@ -80,7 +81,7 @@ int request_parser(const char *filename, struct request *r)
 	/* Pegando o numero de demandas a ser analisadas */
 	n = 0;
 
-	while ((fscanf(file, "p %d %d\n", &i, &j)) > 0) {
+	while ((fscanf(file, "%c %d %d\n", &type, &i, &j)) > 0) {
 		n = n + 1;
 	}
        
@@ -89,13 +90,14 @@ int request_parser(const char *filename, struct request *r)
 	/* Preenchendo a estrutura request */
 	r->n = n;
 
-	r->path = (struct pair *) malloc(n * sizeof(struct pair));
+	r->path = malloc(n * sizeof(struct request_info));
 
 	n = 0;
 
-	while ((fscanf(file, "p %d %d\n", &i, &j)) > 0) {
+	while ((fscanf(file, "%c %d %d\n", &type, &i, &j)) > 0) {
 		s = i - INIT_IN_ZERO;
 		t = j - INIT_IN_ZERO;
+		(r->path)[n].type = type;
 		(r->path)[n].s = s;
 		(r->path)[n].t = t;
 		n = n + 1;

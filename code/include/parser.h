@@ -12,7 +12,8 @@
 #define MAX_BUFFER_SIZE 255
 #define INIT_IN_ZERO 1
 
-struct pair {
+struct request_info {
+	char type; /* tipo da demanda */
 	int s; /* vertice origem */
 	int t; /* vertice destino */
 };
@@ -27,7 +28,7 @@ struct graph {
 
 struct request {
 	int n; /* n de demandas */
-	struct pair *path;
+	struct request_info *path;
 };
 
 /* 
