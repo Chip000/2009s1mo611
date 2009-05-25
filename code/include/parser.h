@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "../include/graph_aux.h"
 
 #define MAX_BUFFER_SIZE 255
 #define INIT_IN_ZERO 1
@@ -29,6 +30,12 @@ struct graph {
 struct request {
 	int n; /* n de demandas */
 	struct request_info *path;
+};
+
+struct graph_aux {
+	int v; /* n de vertices */
+	int e; /* n de arestas */
+	struct vertex_aux *V; /* Lista de adjacencia do grafo auxiliar */
 };
 
 /* 
