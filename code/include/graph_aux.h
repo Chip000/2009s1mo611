@@ -20,7 +20,49 @@ struct vertex_aux {
 	struct vertex_aux *next;
 };
 
+/*
+ * insert_new_vertex_aux: Insere um novo vertice em G
+ * retorna 0 se ocorreu a insercao e 1 cc
+ */
+int insert_new_vertex_aux(struct vertex_aux *G, struct route *p, 
+			  int s, int t);
 
+/*
+ * insert_new_edge_gaux: Insere uma nova aresta em G
+ * retorna 0 se ocorreu a insercao e 1 cc
+ */
+int insert_new_edge_gaux(struct vertex_aux *G, int i, int j);
+
+/*
+ * update_vertex_aux_path: Atualiza o path representado pelo vertice
+ * retorna 1 se atualizou e 0 cc
+ */
+int update_vertex_aux_path(struct vertex_aux *G, int u, struct route *p);
+
+/*
+ * update_vertex_aux_label: Atualiza os labels de todos os vertices do grafo
+ * auxiliar
+ */
+void update_vertex_aux_label(struct vertex_aux *G);
+
+/*
+ * remove_vertex_aux: Remove o vertice u da struct vertex_aux
+ * retorna 0 se ocorreu a remocao e 1 cc
+ */
+int remove_vertex_aux(struct vertex_aux *G, int u);
+
+/*
+ * remove_edge_gaux: Remove uma aresta em G
+ * retorna 0 se ocorreu a remocao e 1 cc
+ */
+int remove_edge_gaux(struct vertex_aux *G, int i, int j);
+
+/* Funcoes de escrita em arquivo */
+/*
+ * print2file_vertex_aux: Imprime em um arquivo as informacoes da 
+ * struct vertex_aux
+ */
+void print2file_vertex_aux(FILE *f, struct vertex_aux *G);
 
 #endif
 /* ! HAVE_GRAPH_AUX_H */

@@ -7,10 +7,10 @@ VPATH=$(SDIR)
 
 TARGET=main
 
-_DEPS = parser.h shortest_path.h struct_route.h routing.h
+_DEPS = parser.h shortest_path.h struct_route.h routing.h graph_aux.h neighbor.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = main.o parser.o shortest_path.o struct_route.o routing.o
+_OBJ = main.o parser.o shortest_path.o struct_route.o routing.o graph_aux.o neighbor.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 CFLAGS=-pedantic -g -Wall -I$(IDIR)

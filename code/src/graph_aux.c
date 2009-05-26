@@ -41,7 +41,7 @@ static void insert_new_vertex_aux_aux(struct vertex_aux *G,
 static void update_vertex_aux_label_aux(struct vertex_aux *G,
 					struct neighbor *nb,
 					int u,
-					int label);
+					int label)
 {
 
 	struct vertex_aux *tmp;
@@ -71,11 +71,30 @@ static void update_vertex_aux_label_aux(struct vertex_aux *G,
 
 
 /*
- *
+ * remove_vertex_neighbor: Remove o vertice v do vertices pertencentes
+ * a sua vizinhanca.
  */
 static void remove_vertex_neighbor(struct vertex_aux *G, 
-				   struct vertex_aux *u)
+				   struct neighbor *u,
+				   int v)
 {
+
+	struct vertex_aux *tmp;
+
+	if (u == NULL) {
+		return;
+	}
+
+	tmp = G;
+	while (tmp->next != NULL) {
+		if (tmp->label == u->label) {
+			remove_neighbor(tmp->nb, v);
+			break;
+		}
+		tmp = tmp->next;
+	}
+
+	remove_vertex_neighbor(G, u->next, v);
 
 	return;
 
@@ -178,8 +197,6 @@ int insert_new_vertex_aux(struct vertex_aux *G, struct route *p,
 	
 } /* insert_new_vertex_aux */
 
-
-
 /*
  * insert_new_edge_gaux: Insere uma nova aresta em G
  * retorna 0 se ocorreu a insercao e 1 cc
@@ -241,10 +258,33 @@ int insert_new_edge_gaux(struct vertex_aux *G, int i, int j)
 
 
 /*
+ * update_vertex_aux_path: Atualiza o path representado pelo vertice
+ * retorna 1 se atualizou e 0 cc
+ */
+int update_vertex_aux_path(struct vertex_aux *G, int u, struct route *p)
+{
+
+	if (G == NULL) {
+		return 0;
+	}
+
+	while (G->next != NULL) {
+		if (G->label == u) {
+			G->p = p;
+			return 1;
+		}
+		G = G->next;
+	}
+
+	return 0;
+
+} /* update_vertex_aux_path */
+
+/*
  * update_vertex_aux_label: Atualiza os labels de todos os vertices do grafo
  * auxiliar
  */
-void update_vertex_aux_label(struct vertex_aux *G);
+void update_vertex_aux_label(struct vertex_aux *G)
 {
 
 	struct vertex_aux *tmp;
@@ -304,8 +344,7 @@ int remove_vertex_aux(struct vertex_aux *G, int u)
 		return 1;
 	}
 
-	/* TODO: here */
-	remove_vertex_neighbor(G, rem->nb->next);
+	remove_vertex_neighbor(G, rem->nb->next, u);
 
 	prev->next = rem->next;
 	free_neighbor(rem->nb);
@@ -375,6 +414,8 @@ int remove_edge_gaux(struct vertex_aux *G, int i, int j)
 	return 0;
 
 } /* remove_edge_gaux */
+
+
 
 /* Funcoes de escrita em arquivo */
 /*

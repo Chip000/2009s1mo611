@@ -26,6 +26,8 @@ static void insert_new_edge_aux(struct route *P, int i, int j, float c)
 
 } /* insert_new_edge_aux */
 
+
+
 /* 
  * create_struct_route: Cria o no cabeca da lista route 
  */
@@ -44,6 +46,8 @@ struct route *create_struct_route(void)
 	return r;
 
 } /* create_struct_route */
+
+
 
 /*
  * insert_new_edge: Insere a aresta na rota P
@@ -66,6 +70,8 @@ int insert_new_edge(struct route *P, int i, int j, float c)
 	
 } /* insert_new_edge */
 
+
+
 /*
  * in_path: Verifica se o vertice u ja esta no caminho
  * retorna 0 caso u nao esta no caminho e 1 cc
@@ -84,6 +90,46 @@ int in_path(struct route *P, int u)
 	return in_path(P->next, u);
 
 } /* in_path */ 
+
+
+
+/*
+ * route_len: Calcula o tamanho da rota
+ */
+int route_len(struct route *P)
+{
+
+	if (P == NULL) {
+		return -1;
+	}
+
+	if (P->next == NULL) {
+		return 0;
+	}
+
+	return (route_len(P->next) + 1);
+
+} /* route_len */
+
+
+
+/*
+ * free_struct_route: Libera a memoria usada pela estrutura route
+ */
+void free_struct_route(struct route *P)
+{
+
+	if (P->next != NULL) {
+		free_struct_route(P->next);
+	}
+
+	free(P);
+
+	return;
+
+} /* free_struct_route */
+
+
 
 /*
  * print_route_path: Imprime a rota de s a t no arquivo especificado
@@ -115,19 +161,31 @@ int print_route_path(FILE *f, struct route *P)
 } /* print_route_path */
 
 /*
- * free_struct_route: Libera a memoria usada pela estrutura route
+ * print2file_struct_route: Imprime a rota de s a t no arquivo especificado
+ * para o grafo auxiliar.
+ * retorna 1 se ocorreu a impressao, 0 se a rota e vazia e -1 cc
  */
-void free_struct_route(struct route *P)
+int print2file_struct_route(FILE *f, struct route *P)
 {
 
-	if (P->next != NULL) {
-		free_struct_route(P->next);
+	if (P == NULL) {
+		return -1;
 	}
 
-	free(P);
+	P = P->next;
+	if (P == NULL) {
+		return 0;
+	}
 
-	return;
+	while (P->next != NULL) {
+		fprintf(f, "a %d %d", P->e.i, P->e.j);
+		P = P->next;
+	}
+	
+	fprintf(f, "\n");
 
-} /* free_struct_route */
+	return 1;
+
+} /* print2file_struct_route */
 
 /* EOF */

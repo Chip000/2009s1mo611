@@ -16,7 +16,7 @@ static void insert_new_neighbor_aux(struct neighbor *u, int v)
 
 	new = (struct neighbor *) malloc(sizeof(struct neighbor));
 
-	new->label = label;
+	new->label = v;
 	new->next = NULL;
 
 	u->next = new;
@@ -76,8 +76,6 @@ int insert_new_neighbor(struct neighbor *u, int v)
  */
 int update_neighbor(struct neighbor *u, int olabel, int nlabel)
 {
-
-	int i;
 
 	if (u == NULL) {
 		return 1;
@@ -161,7 +159,7 @@ void print2file_neighbor(FILE *f, int u, struct neighbor *nb)
 
 	fprintf(f, "a %d %d\n", u, nb->label);
 
-	print2file(f, u, nb->next);
+	print2file_neighbor(f, u, nb->next);
 
 	return;
 

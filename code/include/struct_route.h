@@ -41,10 +41,22 @@ int insert_new_edge(struct route *P, int i, int j, float c);
 int in_path(struct route *P, int u);
 
 /*
+ * route_len: Calcula o tamanho da rota
+ */
+int route_len(struct route *P);
+
+/*
  * print_route_path: Imprime a rota de s a t no arquivo especificado
  * retorna 1 se ocorreu a impressao, 0 se a rota e vazia e -1 cc
  */
 int print_route_path(FILE *f, struct route *P);
+
+/*
+ * print2file_struct_route: Imprime a rota de s a t no arquivo especificado
+ * para o grafo auxiliar.
+ * retorna 1 se ocorreu a impressao, 0 se a rota e vazia e -1 cc
+ */
+int print2file_struct_route(FILE *f, struct route *P);
 
 /*
  * free_struct_route: Libera a memoria usada pela estrutura route

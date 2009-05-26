@@ -35,7 +35,6 @@ void min_route_aux(struct best *b, float **G, int n, int s, int t,
 
 	for (u = 0; u < n; u ++) {
 		if ((G[s][u] != 0) && (in_path(b->p, u) == 0))  {
-			/* bem incompleto*/
 			cost = w + G[s][u]; 
 			if ((u == t) && ((cost + a * T) < b->cost)) {
 				b->cost = cost;
