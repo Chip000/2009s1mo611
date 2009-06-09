@@ -55,8 +55,9 @@ static int min_dist_vertex(float *dist, int n, int *visited)
  *   - Vertice origem
  * Saida:
  *   - Vetor com as distancias
+ *   - Vetor com os predecessores
  */
-void shortest_path(float **G, int n, int s, float **dist)
+void shortest_path(float **G, int n, int s, float **dist, int **prev)
 {
 	int i;
 	int u;
@@ -66,22 +67,20 @@ void shortest_path(float **G, int n, int s, float **dist)
 	float cost;
 
 	int *visited;
-	int *prev;
 
 	/* Inicializacao */
 	cost = 0;
-	prev = init_int_array(n, -1);
 	visited = init_int_array(n, 0);
 
 	for (i = 0; i < n; i++) {
 		(*dist)[i] = INF;
+		(*prev)[i] = -1;
 	}
 
 	S = n;
 
 	/* Valores para o vertice origem */
 	(*dist)[s] = 0;
-	prev[s] = -1;
 
 	while (S != 0) {
 		/* Escolhe o elemento de menor (*dist)ancia */
@@ -97,14 +96,13 @@ void shortest_path(float **G, int n, int s, float **dist)
 				/* Relaxa a aresta (u, i) */
 				if (tmp < (*dist)[i]) {
 					(*dist)[i] = tmp;
-					prev[i] = u;
+					(*prev)[i] = u;
 				}
 			}
 		}
 	}
 
 	/* Liberando memoria */
-	free(prev);
 	free(visited);
 
 	return;
@@ -143,6 +141,7 @@ void print_shortest_path(int **x, int n, int s, int t, float cost)
 	fprintf(stderr, "\n");
 
 	return;
+
 } /* print_shortest_path */
 
 /* EOF */

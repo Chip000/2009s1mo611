@@ -208,7 +208,6 @@ int insert_new_edge_gaux(struct vertex_aux *G, int i, int j)
 	int v;
 
 	struct neighbor *u_nb;
-	struct neighbor *v_nb;
 
 	if (G == NULL) {
 		return 1;
@@ -221,11 +220,6 @@ int insert_new_edge_gaux(struct vertex_aux *G, int i, int j)
 	u = i;
 	v = j;
 
-	if (i > j) {
-		u = j;
-		v = i;
-	}
-
 	/* Encontrando o vertice u */
 	while ((G != NULL) && (G->label != u)) {
 		G = G->next;
@@ -237,19 +231,7 @@ int insert_new_edge_gaux(struct vertex_aux *G, int i, int j)
 
 	u_nb = G->nb;
 
-	/* Encontrando o vertice v */
-	while ((G != NULL) && (G->label != v)) {
-		G = G->next;
-	}
-
-	if (G == NULL) {
-		return 1;
-	}
-
-	v_nb = G->nb;
-
 	insert_new_neighbor(u_nb, v);
-	insert_new_neighbor(v_nb, u);
 
 	return 0;
 
@@ -415,7 +397,22 @@ int remove_edge_gaux(struct vertex_aux *G, int i, int j)
 
 } /* remove_edge_gaux */
 
+/*
+ * free_vertex_aux: Libera a memoria da estrutura vertex_aux.
+ */
+void free_vertex_aux(struct vertex_aux *G)
+{
 
+	if (G != NULL) {
+		free_vertex_aux(G->next);
+		free_neighbor(G->nb);
+		free_struct_route(G->p);
+		free(G);
+	}
+
+	return;
+
+} /* free_vertex_aux */
 
 /* Funcoes de escrita em arquivo */
 /*

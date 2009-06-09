@@ -21,6 +21,11 @@ struct vertex_aux {
 };
 
 /*
+ * create_struct_vertex_aux: Cria o no cabeca da lista de adjacencia
+ */
+struct vertex_aux *create_struct_vertex_aux(void);
+
+/*
  * insert_new_vertex_aux: Insere um novo vertice em G
  * retorna 0 se ocorreu a insercao e 1 cc
  */
@@ -56,6 +61,11 @@ int remove_vertex_aux(struct vertex_aux *G, int u);
  * retorna 0 se ocorreu a remocao e 1 cc
  */
 int remove_edge_gaux(struct vertex_aux *G, int i, int j);
+
+/*
+ * free_vertex_aux: Libera a memoria da estrutura vertex_aux.
+ */
+void free_vertex_aux(struct vertex_aux *G);
 
 /* Funcoes de escrita em arquivo */
 /*

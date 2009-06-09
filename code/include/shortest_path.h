@@ -22,8 +22,9 @@
  *   - Vertice origem
  * Saida:
  *   - Vetor com as distancias
+ *   - Vetor com os predecessores
  */
-void shortest_path(float **G, int n, int s, float **dist);
+void shortest_path(float **G, int n, int s, float **dist, int **prev);
 
 /* DEBUG FUNCTIONS */
 

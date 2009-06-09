@@ -53,6 +53,13 @@ int graph_parser(const char *filename, struct graph *G);
 int request_parser(const char *filename, struct request *r);
 
 /*
+ * graph_aux_parser: Guarda as informacoes do grafo auxiliar na
+ * estrutura graph_aux. 
+ * Retorna 0 em caso de sucesso e 1 caso contrario.
+ */
+int graph_aux_parser(const char *filename, struct graph_aux *G);
+
+/*
  * free_graph: Libera a memoria usada pela estrutura graph.
  */
 void free_graph(struct graph G);
@@ -61,6 +68,11 @@ void free_graph(struct graph G);
  * free_request: Libera a memoria usada pela estrutura request.
  */
 void free_request(struct request r);
+
+/*
+ * free_graph_aux: Libera a memoria usada pela estrutura request.
+ */
+void free_graph_aux(struct graph_aux G);
 
 /* DEBUG FUNCTIONS */
 
@@ -75,6 +87,12 @@ void print_graph(struct graph G);
  * request lida.
  */
 void print_request(struct request r);
+
+/* 
+ * print_graph_aux: imprime as informacoes contidas na estrutura
+ * graph_aux lida.
+ */
+void print_graph_aux(struct graph_aux G);
 
 #endif
 /* ! HAVE_PARSER_H */

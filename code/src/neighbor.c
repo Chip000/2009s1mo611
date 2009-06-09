@@ -157,7 +157,7 @@ void print2file_neighbor(FILE *f, int u, struct neighbor *nb)
 		return;
 	}
 
-	fprintf(f, "a %d %d\n", u, nb->label);
+	fprintf(f, "a %d %d 1\n", u, nb->label);
 
 	print2file_neighbor(f, u, nb->next);
 

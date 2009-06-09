@@ -48,6 +48,5 @@ void free_neighbor(struct neighbor *nb);
  */
 void print2file_neighbor(FILE *f, int u, struct neighbor *nb);
 
-
 #endif
 /* ! HAVE_NEIGHBOR_H */

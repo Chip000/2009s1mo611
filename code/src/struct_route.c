@@ -178,7 +178,7 @@ int print2file_struct_route(FILE *f, struct route *P)
 	}
 
 	while (P->next != NULL) {
-		fprintf(f, "a %d %d", P->e.i, P->e.j);
+		fprintf(f, "a %d %d %.2f\n", P->e.i, P->e.j, P->e.cost);
 		P = P->next;
 	}
 	

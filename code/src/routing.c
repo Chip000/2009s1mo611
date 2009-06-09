@@ -27,10 +27,9 @@ void min_route_aux(struct best *b, float **G, int n, int s, int t,
 	int u;
 	float cost;
 	float *dist;
+	int *prev;
 	
 	/* Inicializacao */
-	dist = (float *) malloc(n * sizeof(float));
-
 	cost = 0;
 
 	for (u = 0; u < n; u ++) {
@@ -41,11 +40,19 @@ void min_route_aux(struct best *b, float **G, int n, int s, int t,
 				insert_new_edge(b->p, s, u, G[s][u]);
 			}
 			else {
-				shortest_path(G, n, u, &dist);
+				dist = (float *) malloc(n * 
+							sizeof(float));
+				prev = (int *) malloc(n * 
+						      sizeof(int));
+
+				shortest_path(G, n, u, &dist, &prev);
 				if ((cost + dist[t]) < b->cost) {
 					min_route_aux(b, G, n, u, t,
 						      cost, a, T);
 				}
+
+				free(dist);
+				free(prev);
 			}
 		}
 	}

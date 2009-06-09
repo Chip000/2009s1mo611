@@ -10,6 +10,7 @@
 #include <libgen.h>
 #include "../include/parser.h"
 #include "../include/routing.h"
+#include "../include/graph_aux.h"
 
 #define DEBUG 1
 #define TARGET "main"
@@ -38,7 +39,7 @@ int main(int argc, char **argv) {
 
 	struct graph G;
 	struct request req;
-/* 	struct graph_aux G_aux; */
+	struct graph_aux G_aux;
 
 	char *file_top;
 	char *file_req;
@@ -83,20 +84,20 @@ int main(int argc, char **argv) {
 	}
 
 	/* Carregando o grafo auxiliar na memoria */
-/* 	if (graph_aux_parser(file_top, &G_aux) != 0) { */
-/* 		fprintf(stderr, ">>>ERROR: "); */
-/* 		fprintf(stderr, "Arquivo do grafo auxiliar invalido!!\n"); */
-/* 		return 1; */
-/* 	} */
+	if (graph_aux_parser(file_top, &G_aux) != 0) {
+		fprintf(stderr, ">>>ERROR: ");
+		fprintf(stderr, "Arquivo do grafo auxiliar invalido!!\n");
+		return 1;
+	}
 
-/* 	if (DEBUG == 1) { */
-/* 		print_graph_aux(G_aux); */
-/* 	} */
+	if (DEBUG == 1) {
+		print_graph_aux(G_aux);
+	}
 
 	/* Liberando memoria */
 	free_graph(G);
 	free_request(req);
-/* 	free_graph_aux(G_aux); */
+	free_graph_aux(G_aux);
 
 	return 0;
 

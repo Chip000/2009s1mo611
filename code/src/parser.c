@@ -110,6 +110,74 @@ int request_parser(const char *filename, struct request *r)
 } /* request_parser */
 
 /*
+ * graph_aux_parser: Guarda as informacoes do grafo auxiliar na
+ * estrutura graph_aux. 
+ * Retorna 0 em caso de sucesso e 1 caso contrario.
+ */
+int graph_aux_parser(const char *filename, struct graph_aux *G)
+{
+
+	int i = 0;
+	int j = 0;
+	int s = 0;
+	int t = 0;
+	int u = 0;
+	int v = 0;
+	int n = 0;
+	int label = 0;
+	struct route *p;
+	float c = 0;
+
+	FILE *file;
+
+	if ((file = fopen(filename, "r")) == NULL) {
+		return 1;
+	}
+
+	/* Pegando a quantidade de vertices */
+	fscanf(file, "n %d\n", &(G->v));
+		
+	/* Pegando a quantidade de arestas */
+	fscanf(file, "m %d\n", &(G->e));
+
+	/* Criando a lista de adjacencia */
+	G->V = create_struct_vertex_aux();
+
+	/* Lendo as info dos vertices */
+	for (i = 0; i < G->v; i++) {
+		fscanf(file, "v %d s %d t %d n %d\n", 
+		       &label, &s, &t, &n);
+
+		/* criando a rota */
+		p = create_struct_route();
+
+		for (j = 0; j < n; j++) {
+			fscanf(file, "a %d %d %f\n", &u, &v, &c);
+			if (insert_new_edge(p, u, v, c) != 0) {
+				return 1;
+			}
+		}
+
+		insert_new_vertex_aux(G->V, p, s, t);
+	}
+
+	/* Lendo as arestas */
+	for (i = 0; i < G->e; i++) {
+		fscanf(file, "a %d %d %f\n", &u, &v, &c);
+		if (insert_new_edge_gaux(G->V, u, v) != 0) {
+			return 1;
+		}
+	}
+		
+	fclose(file);
+
+	return 0;
+
+} /* graph_aux_parser */
+
+
+
+/*
  * free_graph: Libera a memoria usada pela estrutura graph.
  */
 void free_graph(struct graph G)
@@ -138,6 +206,20 @@ void free_request(struct request r)
 	return;
 
 } /* free_request */
+
+/*
+ * free_graph_aux: Libera a memoria usada pela estrutura request.
+ */
+void free_graph_aux(struct graph_aux G)
+{
+
+	free_vertex_aux(G.V);
+
+	return;
+
+} /* free_graph_aux */
+
+
 
 /* DEBUG FUNCTIONS */
 
@@ -192,5 +274,21 @@ void print_request(struct request r)
 	return;
 
 } /* print_request */
+
+/* 
+ * print_graph_aux: imprime as informacoes contidas na estrutura
+ * graph_aux lida.
+ */
+void print_graph_aux(FILE *f, struct graph_aux G)
+{
+
+	fprintf(f, "n %d\n", G.v);
+	fprintf(f, "m %d\n", G.e);
+
+	printf2file_vertex_aux(f, G.V);
+
+	return;
+
+} /* print_graph_aux */
 
 /* EOF */
