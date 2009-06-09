@@ -51,7 +51,7 @@ static int min_dist_vertex(float *dist, int n, int *visited)
  * caminho mais curto de s a todos os outros vértices em um grafo G.
  * Entrada: 
  *   - Matriz de adjacencia contendo as distancias das arestas
- *   - Numero de vertices do grafo.
+ *   - Numero de vertices do grafo
  *   - Vertice origem
  * Saida:
  *   - Vetor com as distancias
