@@ -172,6 +172,28 @@ struct vertex_aux *create_struct_vertex_aux(void)
 
 
 /*
+ * get_e_gaux: Retorna a quantidade de arestas na lista G
+ */
+int get_e_gaux(struct vertex_aux *G)
+{
+
+	int e;
+
+	e = 0;
+
+	while (G->next != NULL) {
+		G = G->next;
+
+		e += get_n_neighbor(G->nb);
+	}
+
+	return e;
+
+} /* get_e_gaux */
+
+
+
+/*
  * insert_new_vertex_aux: Insere um novo vertice em G
  * retorna 0 se ocorreu a insercao e 1 cc
  */
@@ -250,9 +272,11 @@ int update_vertex_aux_path(struct vertex_aux *G, int u, struct route *p)
 		return 0;
 	}
 
-	while (G->next != NULL) {
+	G = G->next;
+	while (G != NULL) {
 		if (G->label == u) {
-			G->p = p;
+			G->p = create_struct_route();
+			cpyroute(G->p, p);
 			return 1;
 		}
 		G = G->next;
@@ -350,7 +374,6 @@ int remove_edge_gaux(struct vertex_aux *G, int i, int j)
 	int v;
 
 	struct neighbor *u_nb;
-	struct neighbor *v_nb;
 
 	if (G == NULL) {
 		return 1;
@@ -363,11 +386,6 @@ int remove_edge_gaux(struct vertex_aux *G, int i, int j)
 	u = i;
 	v = j;
 
-	if (i > j) {
-		u = j;
-		v = i;
-	}
-
 	/* Encontrando o vertice u */
 	while ((G != NULL) && (G->label != u)) {
 		G = G->next;
@@ -379,23 +397,13 @@ int remove_edge_gaux(struct vertex_aux *G, int i, int j)
 
 	u_nb = G->nb;
 
-	/* Encontrando o vertice v */
-	while ((G != NULL) && (G->label != v)) {
-		G = G->next;
-	}
-
-	if (G == NULL) {
-		return 1;
-	}
-
-	v_nb = G->nb;
-
 	remove_neighbor(u_nb, v);
-	remove_neighbor(v_nb, u);
 
 	return 0;
 
 } /* remove_edge_gaux */
+
+
 
 /*
  * free_vertex_aux: Libera a memoria da estrutura vertex_aux.
@@ -414,6 +422,8 @@ void free_vertex_aux(struct vertex_aux *G)
 
 } /* free_vertex_aux */
 
+
+
 /* Funcoes de escrita em arquivo */
 /*
  * print2file_vertex_aux: Imprime em um arquivo as informacoes da 
@@ -426,8 +436,7 @@ void print2file_vertex_aux(FILE *f, struct vertex_aux *G)
 		return;
 	}
 
-	G = G->next;
-	if (G == NULL) {
+	if (G->next == NULL) {
 		return;
 	}
 

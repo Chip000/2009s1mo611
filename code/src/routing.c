@@ -20,24 +20,28 @@
  *   - Conjunto solução
  *   - Custo do caminho
  */
-void min_route_aux(struct best *b, float **G, int n, int s, int t, 
+int min_route_aux(struct best *b, float **G, int n, int s, int t, 
 		   float w, float a, int T)
 {
 
 	int u;
+	int found;
 	float cost;
 	float *dist;
 	int *prev;
-	
+
 	/* Inicializacao */
 	cost = 0;
 
-	for (u = 0; u < n; u ++) {
+	found = 0;
+	for (u = 0; ((u < n) && (found == 0)); u ++) {
 		if ((G[s][u] != 0) && (in_path(b->p, u) == 0))  {
-			cost = w + G[s][u]; 
+			cost = w + G[s][u];
+
 			if ((u == t) && ((cost + a * T) < b->cost)) {
 				b->cost = cost;
 				insert_new_edge(b->p, s, u, G[s][u]);
+				found = 1;
 			}
 			else {
 				dist = (float *) malloc(n * 
@@ -47,8 +51,10 @@ void min_route_aux(struct best *b, float **G, int n, int s, int t,
 
 				shortest_path(G, n, u, &dist, &prev);
 				if ((cost + dist[t]) < b->cost) {
-					min_route_aux(b, G, n, u, t,
-						      cost, a, T);
+					insert_new_edge(b->p, s, u, G[s][u]);
+					found = min_route_aux(b, G, n, u, t,
+							      cost, a, T);
+
 				}
 
 				free(dist);
@@ -57,7 +63,7 @@ void min_route_aux(struct best *b, float **G, int n, int s, int t,
 		}
 	}
 
-	return;
+	return found;
 
 } /* min_route_aux */
 

@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "../include/parser.h"
 #include "../include/struct_route.h"
 #include "../include/neighbor.h"
 
@@ -24,6 +25,11 @@ struct vertex_aux {
  * create_struct_vertex_aux: Cria o no cabeca da lista de adjacencia
  */
 struct vertex_aux *create_struct_vertex_aux(void);
+
+/*
+ * get_e_gaux: Retorna a quantidade de arestas na lista G
+ */
+int get_e_gaux(struct vertex_aux *G);
 
 /*
  * insert_new_vertex_aux: Insere um novo vertice em G

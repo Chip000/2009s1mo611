@@ -112,7 +112,8 @@ int request_parser(const char *filename, struct request *r)
 /*
  * graph_aux_parser: Guarda as informacoes do grafo auxiliar na
  * estrutura graph_aux. 
- * Retorna 0 em caso de sucesso e 1 caso contrario.
+ * Retorna 0 em caso de sucesso e 1 caso o arquivo nao existe e
+ * -1 cc.
  */
 int graph_aux_parser(const char *filename, struct graph_aux *G)
 {
@@ -130,6 +131,13 @@ int graph_aux_parser(const char *filename, struct graph_aux *G)
 
 	FILE *file;
 
+	/* inicializacao */
+	G->v = 0;
+	G->e = 0;
+
+	/* Criando a lista de adjacencia */
+	G->V = create_struct_vertex_aux();
+
 	if ((file = fopen(filename, "r")) == NULL) {
 		return 1;
 	}
@@ -139,9 +147,6 @@ int graph_aux_parser(const char *filename, struct graph_aux *G)
 		
 	/* Pegando a quantidade de arestas */
 	fscanf(file, "m %d\n", &(G->e));
-
-	/* Criando a lista de adjacencia */
-	G->V = create_struct_vertex_aux();
 
 	/* Lendo as info dos vertices */
 	for (i = 0; i < G->v; i++) {
@@ -154,7 +159,7 @@ int graph_aux_parser(const char *filename, struct graph_aux *G)
 		for (j = 0; j < n; j++) {
 			fscanf(file, "a %d %d %f\n", &u, &v, &c);
 			if (insert_new_edge(p, u, v, c) != 0) {
-				return 1;
+				return -1;
 			}
 		}
 
@@ -165,7 +170,7 @@ int graph_aux_parser(const char *filename, struct graph_aux *G)
 	for (i = 0; i < G->e; i++) {
 		fscanf(file, "a %d %d %f\n", &u, &v, &c);
 		if (insert_new_edge_gaux(G->V, u, v) != 0) {
-			return 1;
+			return -1;
 		}
 	}
 		
@@ -218,6 +223,115 @@ void free_graph_aux(struct graph_aux G)
 	return;
 
 } /* free_graph_aux */
+
+
+
+/*
+ * add_new_vertex_in_gaux: Insere um novo vertice em gaux
+ * retorna o label do vertice inserido se ocorreu a insercao e -1 cc
+ */
+int add_new_vertex_in_gaux(struct graph_aux *G, struct route *p, 
+			  int s, int t)
+{
+
+	if (insert_new_vertex_aux(G->V, p, s, t) != 0) {
+		return -1;
+	}
+
+	G->v++;
+
+	return G->v - 1;
+
+} /* add_new_vertex_in_gaux */
+
+/*
+ * add_new_edge_in_gaux: Insere uma nova aresta em gaux
+ * retorna 0 se ocorreu a insercao e 1 cc
+ */
+int add_new_edge_in_gaux(struct graph_aux *G, int u, int v)
+{
+
+	int ret1;
+	int ret2;
+
+	ret1 = insert_new_edge_gaux(G->V, u, v);
+	ret2 = insert_new_edge_gaux(G->V, v, u);
+
+	if ((ret1 != 0) || (ret2 != 0)) {
+		return 1;
+	}
+
+	G->e += 2;
+
+	return 0;
+
+} /* add_new_edge_in_gaux */
+
+/*
+ * del_vertex_in_gaux: Remove o vertice u do grafo gaux
+ * retorna 0 se ocorreu a remocao e 1 cc
+ */
+int del_vertex_in_gaux(struct graph_aux *G, int u)
+{
+
+	if (remove_vertex_aux(G->V, u) != 0) {
+		return 1;
+	}
+
+	G->v --;
+	G->e = get_e_gaux(G->V);
+
+	return 0;
+
+} /* del_vertex_in_gaux */
+
+/*
+ * del_edge_in_gaux: Remove uma aresta em gaux
+ * retorna 0 se ocorreu a remocao e 1 cc
+ */
+int del_edge_in_gaux(struct graph_aux *G, int u, int v)
+{
+
+	int ret1;
+	int ret2;
+
+	ret1 = remove_edge_gaux(G->V, u, v);
+	ret2 = remove_edge_gaux(G->V, v, u);
+
+	if ((ret1 != 0) || (ret2 != 0)) {
+		return 1;
+	}
+
+	G->e -= 2;
+
+	return 0;
+
+} /* del_edge_in_gaux */
+
+/*
+ * vertex_in_gaux: Verifica se o vertice pertence a algum no do grafo
+ * auxiliar
+ * retorna o label do no se v pertence a ele e -1 cc
+ */
+int vertex_in_gaux(struct graph_aux *gaux, int v)
+{
+
+	struct vertex_aux *G;
+
+	G = gaux->V;
+
+	while (G->next != NULL) {
+		G = G->next;
+
+		if ((v == G->s) || (v == G->t) ||
+		    (in_path(G->p, v) != 0)) {
+			return G->label;
+		}
+	}
+
+	return -1;
+
+} /* vertex_in_gaux */
 
 
 
@@ -279,13 +393,22 @@ void print_request(struct request r)
  * print_graph_aux: imprime as informacoes contidas na estrutura
  * graph_aux lida.
  */
-void print_graph_aux(FILE *f, struct graph_aux G)
+void print_graph_aux(const char *fname, struct graph_aux G)
 {
+
+	FILE *f;
+	
+	if ((f = fopen(fname, "w")) == NULL) {
+		fprintf(stderr, ">>>ERROR: Arquivo de topologia invalido\n");
+		exit(1);
+	}
 
 	fprintf(f, "n %d\n", G.v);
 	fprintf(f, "m %d\n", G.e);
 
-	printf2file_vertex_aux(f, G.V);
+	print2file_vertex_aux(f, G.V);
+
+	fclose(f);
 
 	return;
 

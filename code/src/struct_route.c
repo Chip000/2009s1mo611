@@ -114,16 +114,39 @@ int route_len(struct route *P)
 
 
 /*
+ * cpyroute: copia a rota src para a rota dest
+ */
+void cpyroute(struct route *dest, struct route *src)
+{
+	
+	while (src->next != NULL) {
+		src = src->next;
+
+		insert_new_edge_aux(dest, src->e.i, src->e.j, 
+				    src->e.cost);
+
+		dest = dest->next;
+	}
+
+	return;
+
+} /* cpyroute */
+
+
+
+/*
  * free_struct_route: Libera a memoria usada pela estrutura route
  */
 void free_struct_route(struct route *P)
 {
 
-	if (P->next != NULL) {
-		free_struct_route(P->next);
-	}
+	if (P != NULL) {
+		if (P->next != NULL) {
+			free_struct_route(P->next);
+		}
 
-	free(P);
+		free(P);
+	}
 
 	return;
 
@@ -147,10 +170,10 @@ int print_route_path(FILE *f, struct route *P)
 		return 0;
 	}
 
-	fprintf(f, "%d", P->e.i);
+	fprintf(f, "%d", P->e.i + INIT_IN_ZERO);
 
-	while (P->next != NULL) {
-		fprintf(f, " %d", P->e.j);
+	while (P != NULL) {
+		fprintf(f, " %d", P->e.j + INIT_IN_ZERO);
 		P = P->next;
 	}
 	
@@ -177,13 +200,12 @@ int print2file_struct_route(FILE *f, struct route *P)
 		return 0;
 	}
 
-	while (P->next != NULL) {
-		fprintf(f, "a %d %d %.2f\n", P->e.i, P->e.j, P->e.cost);
+	while (P != NULL) {
+		fprintf(f, "a %d %d %.2f\n", P->e.i, 
+			P->e.j, P->e.cost);
 		P = P->next;
 	}
 	
-	fprintf(f, "\n");
-
 	return 1;
 
 } /* print2file_struct_route */

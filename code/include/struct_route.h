@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../include/parser.h"
 
 /* Estrutura que armazena as info de uma aresta */
 struct edge {
@@ -44,6 +45,11 @@ int in_path(struct route *P, int u);
  * route_len: Calcula o tamanho da rota
  */
 int route_len(struct route *P);
+
+/*
+ * cpyroute: copia a rota src para a rota dest
+ */
+void cpyroute(struct route *dest, struct route *src);
 
 /*
  * print_route_path: Imprime a rota de s a t no arquivo especificado

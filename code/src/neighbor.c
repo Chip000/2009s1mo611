@@ -47,6 +47,27 @@ struct neighbor *create_neighbor(void)
 
 
 /*
+ * get_n_neighbor: Retorna a qtde de vizinhos em nb
+ */
+int get_n_neighbor(struct neighbor *nb)
+{
+
+	int n;
+
+	n = 0;
+
+	while (nb->next != NULL) {
+		nb = nb->next;
+		n++;
+	}
+
+	return n;
+
+} /* get_n_neighbor */
+
+
+
+/*
  * insert_new_neighbor: Insere um novo vizinho em u
  * retorna 0 se ocorreu a insercao e 1 cc
  */
@@ -134,11 +155,13 @@ int remove_neighbor(struct neighbor *u, int v)
 void free_neighbor(struct neighbor *nb)
 {
 
-	if (nb->next == NULL) {
-		free_neighbor(nb->next);
-	}
+	if (nb != NULL) {
+		if (nb->next == NULL) {
+			free_neighbor(nb->next);
+		}
 
-	free(nb);
+		free(nb);
+	}
 
 	return;
 

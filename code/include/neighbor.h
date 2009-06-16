@@ -15,6 +15,11 @@ struct neighbor {
 };
 
 /*
+ * get_n_neighbor: Retorna a qtde de vizinhos em nb
+ */
+int get_n_neighbor(struct neighbor *nb);
+
+/*
  * create_neighbor: Cria o no cabeca da lista
  */
 struct neighbor *create_neighbor(void);

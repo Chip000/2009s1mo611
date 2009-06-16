@@ -34,8 +34,8 @@ struct best {
  *   - Conjunto solução
  *   - Custo do caminho
  */
-void min_route_aux(struct best *b, float **G, int n, int s, int t, 
-		   float w, float a, int T);
+int min_route_aux(struct best *b, float **G, int n, int s, int t, 
+		  float w, float a, int T);
 
 /*
  * min_route: encontra a rota minima de s para t
