@@ -49,6 +49,12 @@ int remove_neighbor(struct neighbor *u, int v);
 void free_neighbor(struct neighbor *nb);
 
 /*
+ * has_neighbor: verifica se possui o vertice v como 
+ * vizinho
+ */
+int has_neighbor(struct neighbor *nb, int v);
+
+/*
  * print2file_neighbor: Imprime a vizinhanca de u.
  */
 void print2file_neighbor(FILE *f, int u, struct neighbor *nb);

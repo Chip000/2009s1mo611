@@ -254,14 +254,28 @@ int add_new_edge_in_gaux(struct graph_aux *G, int u, int v)
 	int ret1;
 	int ret2;
 
-	ret1 = insert_new_edge_gaux(G->V, u, v);
-	ret2 = insert_new_edge_gaux(G->V, v, u);
+	int h1;
+	int h2;
 
-	if ((ret1 != 0) || (ret2 != 0)) {
+	if ((h1 = has_edge_gaux(G->V, u, v)) != 0) {
+		ret1 = insert_new_edge_gaux(G->V, u, v);
+	}
+	
+	if ((h2 = has_edge_gaux(G->V, v, u)) != 0) {
+		ret2 = insert_new_edge_gaux(G->V, v, u);
+	}
+
+	if (((h1 != 0) && (ret1 != 0)) || 
+	    ((h2 != 0) && (ret2 != 0))) {
 		return 1;
 	}
 
-	G->e += 2;
+	if (h1 != 0) {
+		G->e ++;
+	}
+	if (h2 != 0) {
+		G->e ++;
+	}
 
 	return 0;
 
@@ -397,7 +411,7 @@ void print_graph_aux(const char *fname, struct graph_aux G)
 {
 
 	FILE *f;
-	
+
 	if ((f = fopen(fname, "w")) == NULL) {
 		fprintf(stderr, ">>>ERROR: Arquivo de topologia invalido\n");
 		exit(1);

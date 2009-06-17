@@ -65,6 +65,51 @@ static void free_matrix_gaux(float **G, int n)
 } /* free_matrix_gaux */
 
 /*
+ * get_min_inpath: pega o vertice que possui a menor distancia 
+ * para o vertice t'
+ */
+static int get_min_inpath(struct graph_aux *G, int s, int t, 
+			  float *d)
+{
+
+	int min;
+	int i;
+	int *prev;
+	float *dist;
+
+	min = 0;
+
+	if (s == -1) {
+		return t;
+	}
+	
+	if (t == -1) {
+		return s;
+	}
+
+	prev = (int *) malloc(G->v * sizeof(int));
+	dist = (float *) malloc(G->v * sizeof(float));
+
+	graph_aux_shortest_path(G, s, &dist, &prev);
+
+	i = t;
+	while (i != -1) {
+		if (d[i] < d[min]) {
+			min = i;
+		}
+
+		i = prev[i];
+	}
+
+	free(dist);
+	free(prev);
+	return min;
+
+} /* get_min_inpath */
+
+
+
+/*
  * graph_aux_shortest_path: Determina o caminho mais curto do
  * vertice u para o vertice v em G.
  * Entrada:
@@ -109,16 +154,87 @@ int triangulation(struct graph_aux *G, int new, int s, int t,
 	while (i != -1) {
 		/* caso possua buracos adiciona uma aresta a 
 		   cada elemento que pertence ao buraco */
-		if ((prev[i] != s) && (prev[i] != -1)) {
-			T++;
-			add_new_edge_in_gaux(G, new, i);
-		}
+		T++;
+		add_new_edge_in_gaux(G, new, i);
+
 		i = prev[i];
 	}
 
 	return T;
 
 } /* triangulation */
+
+/*
+ * triangulation2: Adiciona as arestas restantes necessarias para
+ * tornar o grafo G cordal com a adicao do vertice new
+ */
+int triangulation2(struct graph_aux *G, int new, int u, int v,
+		   struct route *p)
+{
+
+	int T;
+	int z;
+
+	struct vertex_aux *V;
+
+	int *prev;
+	float *dist;
+
+	T = 0;
+
+	if (p == NULL) {
+		return 0;
+	}
+
+	#define DEBUG
+	#ifdef DEBUG
+	print_route_path(stderr, p);
+	#endif
+
+	if (p->next == NULL) {
+		return 0;
+	}
+
+	if (G->V == NULL) {
+		return 0;
+	}
+	
+	p = p->next;
+	while (p != NULL) {
+		V = G->V->next;
+		while (V != NULL) {
+			if ((V->label != new) &&
+			    (V->label != u) &&
+			    (V->label != v) &&
+			    (in_path(V->p, p->e.j) == 1) &&
+			    (has_edge_gaux(G->V, new, V->label) > 0)) {
+				    
+				    prev = (int *) malloc(G->v * 
+							  sizeof(int));
+				    dist = (float *) malloc(G->v * 
+							    sizeof(float));
+				    
+				    graph_aux_shortest_path(G, V->label,
+							    &dist, &prev);
+				    
+				    z = get_min_inpath(G, u, v, dist);
+				    
+				    add_new_edge_in_gaux(G, new, V->label);
+				    
+				    /* verificar buracos */
+				    T += triangulation(G, new, V->label, z, prev);
+
+				    free(dist);
+				    free(prev);
+			    }
+			    V = V->next;
+		}
+		p = p->next;
+	}
+
+	return T;
+
+} /* triangulation2 */
 
 
 
@@ -177,7 +293,7 @@ int gen_graph_aux(struct graph_aux *G, struct graph R,
 
 				graph_aux_shortest_path(G, req.path[r].s,
 							&dist, &prev);
-
+				
 				add_new_edge_in_gaux(G, new, u);
 				add_new_edge_in_gaux(G, new, v);
 				
@@ -201,6 +317,8 @@ int gen_graph_aux(struct graph_aux *G, struct graph R,
 
 			min_route(&b, R.cost, R.v, req.path[r].s, 
 				  req.path[r].t, a, ext_e);
+
+			ext_e += triangulation2(G, new, u, v, b.p);
 
 			update_vertex_aux_path(G->V, new, b.p);
 

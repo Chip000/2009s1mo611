@@ -169,6 +169,37 @@ void free_neighbor(struct neighbor *nb)
 
 
 
+/*
+ * has_neighbor: verifica se possui o vertice v como 
+ * vizinho
+ * retorna 1 caso n possua, 0 caso possua e -1 cc
+ */
+int has_neighbor(struct neighbor *nb, int v)
+{
+
+	if (nb == NULL) {
+		return -1;
+	}
+
+	if (nb->next == NULL) {
+		return -1;
+	}
+
+	nb = nb->next;
+
+	while (nb != NULL) {
+		if (nb->label == v) {
+			return 0;
+		}
+		nb = nb->next;
+	}
+
+	return 1;
+
+} /* has_neighbor */
+
+
+
 /* Funcoes de escrita em arquivo */
 /*
  * print2file_neighbor: Imprime a vizinhanca de u.

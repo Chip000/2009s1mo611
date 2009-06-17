@@ -73,6 +73,11 @@ int remove_edge_gaux(struct vertex_aux *G, int i, int j);
  */
 void free_vertex_aux(struct vertex_aux *G);
 
+/* 
+ * has_edge_gaux: verifica se a aresta u, v pertence a G
+ */
+int has_edge_gaux(struct vertex_aux *G, int u, int v);
+
 /* Funcoes de escrita em arquivo */
 /*
  * print2file_vertex_aux: Imprime em um arquivo as informacoes da 

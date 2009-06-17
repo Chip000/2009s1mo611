@@ -424,6 +424,36 @@ void free_vertex_aux(struct vertex_aux *G)
 
 
 
+/* 
+ * has_edge_gaux: verifica se a aresta u, v pertence a G
+ * retorna 1 caso n possua, 0 caso possua e -1 erro
+ */
+int has_edge_gaux(struct vertex_aux *G, int u, int v)
+{
+
+	if (G == NULL) {
+		return -1;
+	}
+
+	if (G->next == NULL) {
+		return -1;
+	}
+
+	G = G->next;
+
+	while (G != NULL) {
+		if (G->label == u) {
+			return has_neighbor(G->nb, v);
+		}
+		G = G->next;
+	}
+
+	return 1;
+
+} /* has_edge_gaux */
+
+
+
 /* Funcoes de escrita em arquivo */
 /*
  * print2file_vertex_aux: Imprime em um arquivo as informacoes da 
