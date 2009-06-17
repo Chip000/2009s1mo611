@@ -186,11 +186,6 @@ int triangulation2(struct graph_aux *G, int new, int u, int v,
 		return 0;
 	}
 
-	#define DEBUG
-	#ifdef DEBUG
-	print_route_path(stderr, p);
-	#endif
-
 	if (p->next == NULL) {
 		return 0;
 	}
