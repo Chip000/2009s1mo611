@@ -70,6 +70,35 @@ int insert_new_edge(struct route *P, int i, int j, float c)
 	
 } /* insert_new_edge */
 
+/*
+ * remove_edge: Remove a aresta (u, v) da rota P
+ * retorna 0 se ocorreu a remocao e 1 cc
+ */
+int remove_edge(struct route *P, int u, int v)
+{
+
+	struct route *rem;
+
+	if (P == NULL) {
+		return 1;
+	}
+
+	rem = P->next;
+	while (rem != NULL) {
+		if ((rem->e.i == u) && (rem->e.j == v)) {
+			P->next = rem->next;
+			free(rem);
+			return 0;
+		}
+
+		rem = rem->next;
+		P = P->next;
+	}
+
+	return 1;
+	
+} /* remove_edge */
+
 
 
 /*

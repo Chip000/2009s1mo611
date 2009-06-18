@@ -54,7 +54,9 @@ int min_route_aux(struct best *b, float **G, int n, int s, int t,
 					insert_new_edge(b->p, s, u, G[s][u]);
 					found = min_route_aux(b, G, n, u, t,
 							      cost, a, T);
-
+					if (found == 0) {
+						remove_edge(b->p, s, u);
+					}
 				}
 
 				free(dist);

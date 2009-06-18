@@ -36,6 +36,12 @@ struct route *create_struct_route(void);
 int insert_new_edge(struct route *P, int i, int j, float c);
 
 /*
+ * remove_edge: Remove a aresta (u, v) da rota P
+ * retorna 0 se ocorreu a remocao e 1 cc
+ */
+int remove_edge(struct route *P, int u, int v);
+
+/*
  * in_path: Verifica se o vertice u ja esta no caminho
  * retorna 0 caso u nao esta no caminho e 1 cc
  */
