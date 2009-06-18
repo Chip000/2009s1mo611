@@ -42,6 +42,12 @@ int insert_new_edge(struct route *P, int i, int j, float c);
 int in_path(struct route *P, int u);
 
 /*
+ * edge_in_path: Verifica se a aresta (u,v) ja esta no caminho
+ * retorna 0 caso u nao esta no caminho e 1 cc
+ */
+int edge_in_path(struct route *P, int u,int v);
+
+/*
  * route_len: Calcula o tamanho da rota
  */
 int route_len(struct route *P);

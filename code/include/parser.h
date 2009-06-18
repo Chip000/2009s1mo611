@@ -107,6 +107,11 @@ int del_edge_in_gaux(struct graph_aux *G, int u, int v);
  */
 int vertex_in_gaux(struct graph_aux *gaux, int v);
 
+/*
+ * have_path: Verifica quais vertices do grafo auxiliar possui
+ * uma aresta em comum com p
+ */
+int *have_path(struct graph_aux *Gaux, struct route *p);
 
 /* DEBUG FUNCTIONS */
 

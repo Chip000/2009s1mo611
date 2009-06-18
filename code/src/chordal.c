@@ -64,48 +64,48 @@ static void free_matrix_gaux(float **G, int n)
 
 } /* free_matrix_gaux */
 
-/*
- * get_min_inpath: pega o vertice que possui a menor distancia 
- * para o vertice t'
- */
-static int get_min_inpath(struct graph_aux *G, int s, int t, 
-			  float *d)
-{
+/* /\* */
+/*  * get_min_inpath: pega o vertice que possui a menor distancia  */
+/*  * para o vertice t' */
+/*  *\/ */
+/* static int get_min_inpath(struct graph_aux *G, int s, int t,  */
+/* 			  float *d) */
+/* { */
 
-	int min;
-	int i;
-	int *prev;
-	float *dist;
+/* 	int min; */
+/* 	int i; */
+/* 	int *prev; */
+/* 	float *dist; */
 
-	min = 0;
+/* 	min = 0; */
 
-	if (s == -1) {
-		return t;
-	}
+/* 	if (s == -1) { */
+/* 		return t; */
+/* 	} */
 	
-	if (t == -1) {
-		return s;
-	}
+/* 	if (t == -1) { */
+/* 		return s; */
+/* 	} */
 
-	prev = (int *) malloc(G->v * sizeof(int));
-	dist = (float *) malloc(G->v * sizeof(float));
+/* 	prev = (int *) malloc(G->v * sizeof(int)); */
+/* 	dist = (float *) malloc(G->v * sizeof(float)); */
 
-	graph_aux_shortest_path(G, s, &dist, &prev);
+/* 	graph_aux_shortest_path(G, s, &dist, &prev); */
 
-	i = t;
-	while (i != -1) {
-		if (d[i] < d[min]) {
-			min = i;
-		}
+/* 	i = t; */
+/* 	while (i != -1) { */
+/* 		if (d[i] < d[min]) { */
+/* 			min = i; */
+/* 		} */
 
-		i = prev[i];
-	}
+/* 		i = prev[i]; */
+/* 	} */
 
-	free(dist);
-	free(prev);
-	return min;
+/* 	free(dist); */
+/* 	free(prev); */
+/* 	return min; */
 
-} /* get_min_inpath */
+/* } /\* get_min_inpath *\/ */
 
 
 
@@ -154,8 +154,9 @@ int triangulation(struct graph_aux *G, int new, int s, int t,
 	while (i != -1) {
 		/* caso possua buracos adiciona uma aresta a 
 		   cada elemento que pertence ao buraco */
-		T++;
-		add_new_edge_in_gaux(G, new, i);
+		if (add_new_edge_in_gaux(G, new, i) == 0) {
+			T++;
+		}
 
 		i = prev[i];
 	}
@@ -163,73 +164,6 @@ int triangulation(struct graph_aux *G, int new, int s, int t,
 	return T;
 
 } /* triangulation */
-
-/*
- * triangulation2: Adiciona as arestas restantes necessarias para
- * tornar o grafo G cordal com a adicao do vertice new
- */
-int triangulation2(struct graph_aux *G, int new, int u, int v,
-		   struct route *p)
-{
-
-	int T;
-	int z;
-
-	struct vertex_aux *V;
-
-	int *prev;
-	float *dist;
-
-	T = 0;
-
-	if (p == NULL) {
-		return 0;
-	}
-
-	if (p->next == NULL) {
-		return 0;
-	}
-
-	if (G->V == NULL) {
-		return 0;
-	}
-	
-	p = p->next;
-	while (p != NULL) {
-		V = G->V->next;
-		while (V != NULL) {
-			if ((V->label != new) &&
-			    (V->label != u) &&
-			    (V->label != v) &&
-			    (in_path(V->p, p->e.j) == 1) &&
-			    (has_edge_gaux(G->V, new, V->label) > 0)) {
-				    
-				    prev = (int *) malloc(G->v * 
-							  sizeof(int));
-				    dist = (float *) malloc(G->v * 
-							    sizeof(float));
-				    
-				    graph_aux_shortest_path(G, V->label,
-							    &dist, &prev);
-				    
-				    z = get_min_inpath(G, u, v, dist);
-				    
-				    add_new_edge_in_gaux(G, new, V->label);
-				    
-				    /* verificar buracos */
-				    T += triangulation(G, new, V->label, z, prev);
-
-				    free(dist);
-				    free(prev);
-			    }
-			    V = V->next;
-		}
-		p = p->next;
-	}
-
-	return T;
-
-} /* triangulation2 */
 
 
 
@@ -259,6 +193,7 @@ int gen_graph_aux(struct graph_aux *G, struct graph R,
 	float *dist;
 
 	struct best b;
+	int *vertex;
 
 	FILE *f;
 
@@ -273,47 +208,44 @@ int gen_graph_aux(struct graph_aux *G, struct graph R,
 		ext_e = 0;
 		if (req.path[r].type == 'p') {
 			/* o grafo deve continuar cordal */
-			u = vertex_in_gaux(G, req.path[r].s);
-			v = vertex_in_gaux(G, req.path[r].t);
+
+			min_route(&b, R.cost, R.v, req.path[r].s, 
+				  req.path[r].t, a, ext_e);
+
+			vertex = have_path(G, b.p);
+
+			free_struct_route(b.p);
 
 			new = add_new_vertex_in_gaux(G, NULL, 
 						     req.path[r].s,
 						     req.path[r].t);
 
-			if ((u != -1) && (v != -1)) {
-				prev = (int *) malloc(G->v * 
-						      sizeof(int));
-				dist = (float *) malloc(G->v * 
-							sizeof(float));
+			prev = (int *) malloc(G->v * sizeof(int));
+			dist = (float *) malloc(G->v * sizeof(float));
 
-				graph_aux_shortest_path(G, req.path[r].s,
-							&dist, &prev);
-				
-				add_new_edge_in_gaux(G, new, u);
-				add_new_edge_in_gaux(G, new, v);
-				
-				/* encontra o valor de T */
-				ext_e = triangulation(G, new, u, v, prev);
-			}
-			else {
-				/* possui no em comum com somente u */
-				if (u != -1) {
+			for (u = 0; u < G->v - 1; u ++) {
+				if (vertex[u] != 0) {
 					add_new_edge_in_gaux(G, new, u);
+					for (v = u + 1; v < G->v - 1; v++) {
+						if (vertex[v] != 0) {
+							add_new_edge_in_gaux(G, new, v);
+
+							graph_aux_shortest_path(G, req.path[r].s, &dist, &prev);
+
+							/* encontra o valor de T */
+							ext_e += triangulation(G, new, u, v, prev);
+						}
+					}
+					
 				}
-				/* possui no em comum com somente v */
-				else if (v != -1) {
-					add_new_edge_in_gaux(G, new, v);
-				}
-				/* so adiciona o vertice caso nao possui
-				   nenhum no em comum */
-				/* nao fez triangulacao */
-				ext_e = 0;
 			}
+
+			free(vertex);
+			free(prev);
+			free(dist);
 
 			min_route(&b, R.cost, R.v, req.path[r].s, 
 				  req.path[r].t, a, ext_e);
-
-			ext_e += triangulation2(G, new, u, v, b.p);
 
 			update_vertex_aux_path(G->V, new, b.p);
 

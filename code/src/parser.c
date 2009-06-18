@@ -349,6 +349,46 @@ int vertex_in_gaux(struct graph_aux *gaux, int v)
 
 
 
+/*
+ * have_path: Verifica quais vertices do grafo auxiliar possui
+ * uma aresta em comum com p
+ */
+int *have_path(struct graph_aux *Gaux, struct route *p)
+{
+
+	struct vertex_aux *V;
+	struct route *paux;
+	int *res;
+
+	int i;
+
+	res = (int *) malloc(Gaux->v * sizeof(int));
+
+	for (i = 0; i < Gaux->v; i++) {
+		res[i] = 0;
+	}
+
+	if ((Gaux->V != NULL) && (p != NULL)) {
+		V = Gaux->V->next;
+
+		while (V != NULL) {
+			paux = p->next;
+			while (paux != NULL) {
+				if (edge_in_path(V->p, 
+						 paux->e.i, 
+						 paux->e.j) != 0) {
+					res[V->label] = 1;
+				}
+				paux = paux->next;
+			}
+			V = V->next;
+		}
+	}
+
+	return res;
+
+} /* have_path */
+
 /* DEBUG FUNCTIONS */
 
 /* 

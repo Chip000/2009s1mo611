@@ -91,6 +91,26 @@ int in_path(struct route *P, int u)
 
 } /* in_path */ 
 
+/*
+ * edge_in_path: Verifica se a aresta (u,v) ja esta no caminho
+ * retorna 0 caso u nao esta no caminho e 1 cc
+ */
+int edge_in_path(struct route *P, int u,int v)
+{
+
+	if (P == NULL) {
+		return 0;
+	}
+
+	if (((P->e.i == u) && (P->e.j == v)) || 
+	    ((P->e.i == v) && (P->e.j == u))) {
+		return 1;
+	}
+
+	return edge_in_path(P->next, u, v);
+
+} /* edge_in_path */ 
+
 
 
 /*
