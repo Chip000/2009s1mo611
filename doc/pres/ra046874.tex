@@ -1,0 +1,381 @@
+\documentclass{beamer}
+
+\mode<presentation>
+{
+  \usetheme{Warsaw}
+  \setbeamercovered{transparent}
+}
+
+\usepackage[brazil]{babel}
+\usepackage[latin1]{inputenc}
+
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{graphics}
+
+\include{include/abaco}
+
+\title[Algoritmo de roteamento para o problema RWA]{Algoritmo de roteamento para o problema RWA Parametrizado}
+\author{Victor de Abreu Iizuka}
+
+\institute[Universidade Estadual de Campinas] {
+  \text{Prof. Edmundo Roberto Mauro Madeira e Prof. Nelson Luis Saldanha da Fonseca} \\
+  \textbf{Instituto de Computação - UNICAMP}\\
+  \parbox{1in}{\center{\ABACO{2}{0}{0}{9}{0.5}}}
+}
+
+\date{MO611}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\frame{\tableofcontents}
+
+\section{Introdução}
+\subsection{Motivação}
+
+\frame{
+  \frametitle{Roteamento e Alocação de Comprimentos de Onda (RWA)}
+  \begin{itemize}
+    \item{Redes WDM são redes nas quais múltiplos caminhos ópticos são 
+      multiplexados em uma única fibra óptica}
+    \item{Em redes WDM transparentes todos os caminhos ópticos permanecem 
+      no meio óptico da origem ao destino}
+  \end{itemize}
+  \vspace{0.5cm}
+  \begin{itemize}
+  \item{O problema de RWA define as rotas e comprimentos de onda a serem 
+    alocados para cada caminho óptico}
+  \item{O número de comprimentos de onda utilizado pode ser minimizado 
+    de forma a reduzir o custo total da rede}
+  \end{itemize}
+}
+
+\frame{
+  \frametitle{Motivação}
+  \begin{itemize}
+  \item{A alocação de comprimentos de onda em redes WDM é um problema 
+    NP-Completo}
+  \item{Heuristicas são extensamente utilizadas na literatura 
+    ({\color[rgb]{1,0,0} resultados aproximados})}
+  \end{itemize}
+  \begin{itemize}
+  \item{Uma abordagem que pudesse obter uma solução 
+    {\color[rgb]{1,0,0}EXATA} em um curto período de tempo é desejável}
+  \end{itemize}
+  \note[item]{A motivação do problema está no fato de que o problema de WA 
+    em redes em malha é NP-Completo levando a literatura a considerar 
+    métodos heurísticos que nem sempre garantem uma boa solução.}
+  \note[item]{Devido a isso, a investigação de algoritmos para obtenção 
+    de soluções exatas e eficientes faz-se necessária.}
+}
+
+\frame{
+  \frametitle{Grafo Auxiliar}
+  \begin{itemize}
+    \item{Os caminhos ópticos na rede são os vértices do grafo auxiliar}
+    \item{A aresta ($i$, $j$) no grafo auxiliar indica que os caminhos 
+      representados pelos vértices $i$ e $j$ compartilham um enlace}
+  \end{itemize}
+}
+
+\frame{
+  \frametitle{WA - Coloração de Vértices (1/3)}
+  \begin{itemize}
+  \item{Roteamento dos caminhos ópticos a serem estabelecidos}
+  \item{A ( 1-4-2 ) | B ( 1-4-3 ) | C ( 1-2-3-4 )}
+  \end{itemize}
+  \begin{columns}[t]
+    \begin{column}{5cm}
+      \begin{beamerboxesrounded}[center,shadow=true]{Topologia Física}
+        \begin{center}
+	  \includegraphics[bb=0 0 273 277, width=4cm]{fig/physical_topology-simple.pdf}
+        \end{center}
+      \end{beamerboxesrounded}
+    \end{column}
+    \begin{column}{5cm}
+      \begin{beamerboxesrounded}[center,shadow=true]{Topologia Virtual}
+        \begin{center}
+	  \includegraphics[bb=0 0 273 277, width=4cm]{fig/virtual_topology-simple.pdf}
+        \end{center}
+      \end{beamerboxesrounded}
+    \end{column}
+  \end{columns}
+  \note{Neste slide o problema de coloração de vértices começa a ser 
+    apresentado.}
+  \note[item]{Passo 1}
+  \note[item]{Considerendo a topologia física mostrada e os caminhos 
+    ópticos indicados.}
+  \note[item]{Define-se a seguinte topologia virtual}
+}
+
+\frame{
+  \frametitle{WA - Coloração de Vértices (2/3)}
+  \begin{itemize}
+  \item{Cria-se o Grafo Auxiliar}
+  \item<2->{Computar uma coloração mínima (vértices adjacentes recebem 
+    cores diferentes)}
+  \end{itemize}
+  \begin{columns}[t]
+    \begin{column}{5cm}
+      \begin{beamerboxesrounded}[center,shadow=true]{Grafo Auxiliar}
+	\begin{center}
+	  \includegraphics[bb=0 0 275 275, width=4cm]{fig/auxiliar_graph-simple.pdf}
+	\end{center}
+      \end{beamerboxesrounded}
+    \end{column}
+    \begin{column}{5cm}
+      \begin{beamerboxesrounded}[center,shadow=true]{Grafo Auxiliar Colorido}
+	\begin{center}
+	  \includegraphics<2->[bb=0 0 275 275, width=4cm]{fig/auxiliar_graph_color-simple.pdf}
+	\end{center}
+      \end{beamerboxesrounded}
+    \end{column}
+  \end{columns}
+  \note[item]{Passo 2}
+  \note[item]{Construir um grafo auxiliar cujos vértices representam os 
+    caminhos ópticos na rede, e as arestas indicam a existência de pelo 
+    menos um enlace compartilhado}
+  \note[item]{Efetuar a coloração do grafo auxiliar de forma que nós 
+    adjacentes recebam cores distintas.}
+}
+
+\frame{
+  \frametitle{WA - Coloração de Vértices (3/3)}
+  \begin{itemize}
+  \item{Coloração pode ser diretamente mapeada em comprimentos de onda}
+  \item<2->{Alocação de comprimentos de onda completada}
+  \end{itemize}
+  \begin{columns}[t]
+    \begin{column}{5cm}
+      \begin{beamerboxesrounded}[center,shadow=true]{Caminhos Ópticos Coloridos}
+	\begin{center}
+	  \includegraphics[bb=0 0 273 277, width=4cm]{fig/virtual_topology_color-simple.pdf}
+	\end{center}
+      \end{beamerboxesrounded}
+    \end{column}
+    \begin{column}{5cm}
+      \begin{beamerboxesrounded}[center,shadow=true]{Comprimentos de Onda}
+	\begin{center}
+	  \includegraphics<2->[bb=0 0 273 293, width=4cm]{fig/wavelength_assignment-simple.pdf}
+	\end{center}
+      \end{beamerboxesrounded}
+    \end{column}
+  \end{columns}
+  \note[item]{Passo 3}
+  \note[item]{Mapear a coloração para os caminhos ópticos}
+  \note[item]{Alocar os comprimentos de onda na rede física}
+}
+
+\frame{
+  \frametitle{Complexidade da Coloração de Vértices}
+  \begin{beamerboxesrounded}[center,shadow=true]{Complexidade de Tempo}
+    \begin{center}
+      \begin{tabular}{|c|c|}
+        \hline
+        \textbf{Classe de Grafos} & \textbf{Complexidade} \\
+        \hline
+        \hline
+        Cordal & {\color[rgb]{0,0,1}Linear} \\ 
+        \hline
+        Bipartido & Polinomial \\
+        \hline 
+        Geral & {\color[rgb]{1,0,0}NP-Difícil} \\
+        \hline
+      \end{tabular}
+    \end{center}
+  \end{beamerboxesrounded}
+  \note[item]{Tabela mostrando a variação da complexidade do problema de 
+    coloração para diferentes classes de grafos}
+  \note[item]{NP-Difícil para grafos gerais.}
+  \note[item]{Linear para grafos da classe chordal.}
+}
+
+\subsection{Complexidade Parametrizada}
+\frame{
+  \frametitle{Teoria da Complexidade Parametrizada}
+  \begin{itemize}
+  \item{É um ramo recente da Teoria da Complexidade}
+  \item{Provê um arcabouço para a análise de problemas difíceis}
+  \item{Remodela problemas difíceis concentrando a exponencialidade do 
+    problema em um parâmetro}
+  \item{Introduz a noção de Tratabilidade por Parâmetro-Fixo (FPT)}
+  \end{itemize}
+  \pause
+  \begin{beamerboxesrounded}[center,shadow=true]{Problemas tratáveis por Parâmetro-Fixo}
+    \begin{itemize}
+    \item{Problemas nos quais o parâmetro é definido são chamados 
+      problemas parametrizados}
+    \item{Um problema parametrizado que permite um algoritmo FPT é dito 
+      como sendo um problema tratável por parâmetro-fixo e pertence a 
+      classe \textbf{FPT}}
+    \end{itemize}
+  \end{beamerboxesrounded}
+  \note{Não tem muito o que explicar, basicamente ler o slide.}
+}
+
+\subsection{Complexidade Parametrizada da Coloração de Vértices}
+\frame{
+  \frametitle{Complexidade Parametrizada da Coloração de Vértices (1/3)}
+
+  \begin{beamerboxesrounded}[center,shadow=true]{Noções Básicas}
+    \begin{itemize}
+    \item{Considere uma classe de grafos $F$ e um inteiro positivo $k$, 
+      $F - ke$ denota a classe de grafos que pode ser obtida a partir de 
+      $F$ ao se remover no máximo $k$ arestas}
+    \item{$k$ é o parâmetro do problema}
+    \end{itemize}
+  \end{beamerboxesrounded}
+  \note{Solução parametrizada para o problema de coloração de vértices.}
+  \note[item]{Passo1}
+  \note[item]{Definir $F - ke$ como a classe de grafos constituída pelos grafos da família $F$ obtidos através da remoção de, no máximo, $k$ arestas.}
+  \note[item]{$k$ é o parâmetro a ser fixado}
+}
+
+\frame{
+  \frametitle{Complexidade Parametrizada da Coloração de Vértices (2/3)}
+
+  \begin{beamerboxesrounded}[center,shadow=true]{Teorema}
+    \begin{itemize}
+    \item{Seja $F$ uma classe de grafos contraível nas arestas e $T(m, n)$ 
+      o tempo necessário para se calcular uma coloração ótima para um 
+      grafo da classe $F$}
+    \item{Uma coloração ótima para um grafo $G$ da classe $F - ke$, dado 
+      um modulador de $G$, pode ser encontrado com a complexidade de 
+      tempo $O(2^k max\{T(m+k,n), m+n+k\})$}
+    \item{Um {\color[rgb]{1,0,0}modulador} é o conjunto de $k$ arestas 
+      que, após serem adicionadas a $G$, transformam $G$ em um grafo da 
+      classe $F$}
+    \end{itemize}
+  \end{beamerboxesrounded}
+  \note[item]{Dada uma classe de grafos $F$ contraíveis nas arestas, e o 
+    tempo necessário para calcular sua coloração.}
+  \note[item]{A coloração ótima para um grafo da classe $F - ke$ pode ser 
+    encontrada em tempo proporcional ao tempo gasto para colorir um grafo 
+    da classe $F$ + um fator exponencial no parâmetro $k$.}
+  \note[item]{O modulator é justamente o conjunto das arestas retiradas 
+    do grafo da classe $F$, sendo o seu tamanho igual a $k$.}
+}
+
+\frame{
+  \frametitle{Complexidade Parametrizada da Coloração de Vértices (3/3)}
+
+  \begin{beamerboxesrounded}[center,shadow=true]{Algoritmo Linear para Grafos Cordais}
+    \begin{itemize}
+    \item{Um grafo é cordal se não possuir nenhum ciclo induzido $C_n$, 
+      para $n \geq 4$}
+    \item{Um modulador para um grafo $cordal - ke$ pode ser encontrado em 
+      tempo $O(f(k)(m+n))$}
+    \item{Uma coloração ótima de um grafo cordal pode ser encontrada em 
+      tempo $O(m+n)$}
+    \end{itemize}
+  \end{beamerboxesrounded}
+  \vspace{0.2cm}
+  \pause
+  Logo:
+  \vspace{0.2cm}
+  \begin{beamerboxesrounded}[center,shadow=true]{}
+    Uma coloração ótima para um grafo $cordal - ke$ pode ser encontrada 
+    com a complexidade de tempo $O(f(k)(m+n))$.
+
+    Linear para um parâmetro fixo $k$
+  \end{beamerboxesrounded}
+  \note[item]{Um grafo é cordal se ele for triangulado, ou seja, não 
+    contiver ciclos grandes.}
+  \note[item]{Um modulator para a classe cordal pode ser encontrado em 
+    tempo linear no tamanho da entrada + um fator exponencial no 
+    parâmetro $k$.}
+  \note[item]{A coloração ótima de um grafo cordal pode ser encontrada 
+    em tempo linear.}
+  \note[item]{Portanto, a coloração ótima de um grafo $chordal - ke$ 
+    pode ser encontrada em tempo linear em relação ao tamanho da 
+    entrada + um fator exponencial em relação ao parâmetro $k$.}
+}
+
+\section{Alocação de Comprimentos de Onda}
+
+\frame{
+  \frametitle{Aplicação para o Problemas de Alocação de Comprimentos de Onda}
+  \begin{itemize}
+  \item{Para se obter um grafo auxiliar quasi-cordal é necessário 
+    evitar uma relação de interferência que forme um ciclo fechado}
+  \item<2->{Não é possível limitar o número nem o tamanho dos ciclos 
+    no caso de topologias gerais}
+  \end{itemize}
+  \begin{columns}[t]
+    \begin{column}{6.5cm}
+      \begin{beamerboxesrounded}[center,shadow=true]{Interferência entre Caminhos Ópticos}
+	\begin{center}
+	  \includegraphics[bb=0 0 301 152, width=5.5cm]{fig/grafo_interferencia.pdf}
+	\end{center}
+      \end{beamerboxesrounded}
+    \end{column}
+    \begin{column}{3.5cm}
+      \begin{beamerboxesrounded}[center,shadow=true]{Grafo Auxiliar}
+	\begin{center}
+	  \includegraphics<2->[bb=0 0 143 157, width=2.5cm]{fig/grafo_auxiliar.pdf}
+	\end{center}
+      \end{beamerboxesrounded}
+    \end{column}
+  \end{columns}
+  \note[item]{Para que a aplicação do arcabouço parametrizado no problema 
+    de alocação de comprimento de ondas seja eficiente, é necessário 
+    que os grafos auxiliares obtidos sejam quase-cordais.}
+  \note[item]{Para tal, os caminhos ópticos na rede não podem 
+    compartilhar enlaces de forma que um ciclo seja formado, 
+    pois nesse caso o grafo auxiliar conterá buracos. (as 
+    figuras mostram um cenário de rede no qual ocorre a formação de 
+    um buraco no grafo auxiliar)}
+  \note[item]{Fica claro que é impossível evitar tal comportamento 
+    em topologias genéricas sem restrição no estabelecimento de chamadas.}
+}
+
+\section{Exemplos Numéricos}
+
+\frame{
+  \frametitle{Complexidade}
+  \begin{beamerboxesrounded}[center,shadow=true]{Colorindo um grafo 
+      $chordal-ke$}
+    \begin{center}
+      $O\left( \frac{4^k}{(k+1)^{\frac{3}{2}}}(m+n)\right)$
+    \end{center}
+  \end{beamerboxesrounded}
+  \vspace{1cm}
+  \pause
+  \begin{beamerboxesrounded}[center,shadow=true]{}
+    A análise de pior caso {\color[rgb]{1,0,0}não} permite a avaliação 
+    do impacto {\color[rgb]{1,0,0}real} do parâmetro $k$ na solução do 
+    problema de Alocação de Comprimentos de Onda 
+  \end{beamerboxesrounded}
+  \note[item]{A fórmula mostra a complexidade do pior caso para o problema.}
+  \note[item]{Porém o pior caso não é suficiente para se avaliar o 
+    impacto da complexidade do problema no mundo real.}
+}
+
+\subsection{Cenário}
+
+\subsection{Resultados}
+
+\subsection{Conclusões}
+
+\frame{
+  \frametitle{Conclusões}
+  \begin{itemize}
+  \item{A Teoria da Complexidade Parametrizável produz soluções eficientes}
+  \item{A Teoria de Complexidade Parametrizada pode levar a 
+    construção de algoritmos que explorem características não trivias 
+    do problema de Alocação de Comprimentos de Onda}
+  \item{Define novos horizontes para a aplicação na alocação de 
+    comprimentos de onda em redes transparentes}
+  \end{itemize}
+  \note[item]{A Teoria de Complexidade Parametrizada pode levar a 
+    construção de algoritmos que explorem características não trivias 
+    do problema de Alocação de Comprimentos de Onda.}
+  \note[item]{Uma nova área de pesquisa se abre com espaço para 
+    muitos trabalhos que apliquem esta teoria na solução de 
+    problemas em redes óticas.}
+}
+
+
+\end{document}
