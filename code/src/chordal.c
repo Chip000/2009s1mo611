@@ -147,6 +147,7 @@ int triangulation(struct graph_aux *G, int new, int s, int t,
 
 	int T;
 	int i;
+	int ret;
 
 	T = 0;
 
@@ -154,8 +155,11 @@ int triangulation(struct graph_aux *G, int new, int s, int t,
 	while (i != -1) {
 		/* caso possua buracos adiciona uma aresta a 
 		   cada elemento que pertence ao buraco */
-		if (add_new_edge_in_gaux(G, new, i) == 0) {
+		if ((ret = add_new_edge_in_gaux(G, new, i)) == 0) {
 			T++;
+			if (insert(MOD.e, new, i) == 0) {
+				MOD.n++;
+			}
 		}
 
 		i = prev[i];
@@ -180,7 +184,8 @@ int triangulation(struct graph_aux *G, int new, int s, int t,
  *   - 0 em caso de sucesso das operacoes e 1 cc
  */
 int gen_graph_aux(struct graph_aux *G, struct graph R,
-		  struct request req, float a, const char *fname)
+		  struct request req, float a, const char *fname,
+		  const char *modfile)
 {
 
 	int u;
@@ -196,8 +201,17 @@ int gen_graph_aux(struct graph_aux *G, struct graph R,
 	int *vertex;
 
 	FILE *f;
+	FILE *fmod;
 
 	if ((f = fopen(fname, "w")) == NULL) {
+		return 1;
+	}
+
+	/* inicializando as info do modulador */
+	MOD.n = 0;
+	MOD.e = create_struct_new_edges();
+
+	if ((fmod = fopen(modfile, "w")) == NULL) {
 		return 1;
 	}
 
@@ -265,6 +279,12 @@ int gen_graph_aux(struct graph_aux *G, struct graph R,
 		}
 	}
 
+	fprintf(fmod, "%d\n", MOD.n);
+	print2file_struct_new_edges(fmod, MOD.e);
+
+	free_struct_new_edges(MOD.e);
+
+	fclose(fmod);
 	fclose(f);
 
 	return 0;

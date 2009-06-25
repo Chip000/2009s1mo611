@@ -12,6 +12,11 @@
 \usepackage{graphicx}
 \usepackage{setspace}
 \usepackage{graphics}
+\usepackage[portugues, 
+	    resetcount, 
+	    noline]{algorithm2e}
+\usepackage{amsmath}
+\usepackage{amsfonts}
 
 \include{include/abaco}
 
@@ -217,7 +222,7 @@
 
 \subsection{Complexidade Parametrizada da Coloração de Vértices}
 \frame{
-  \frametitle{Complexidade Parametrizada da Coloração de Vértices (1/3)}
+  \frametitle{Complexidade Parametrizada da Coloração de Vértices (1/4)}
 
   \begin{beamerboxesrounded}[center,shadow=true]{Noções Básicas}
     \begin{itemize}
@@ -234,7 +239,7 @@
 }
 
 \frame{
-  \frametitle{Complexidade Parametrizada da Coloração de Vértices (2/3)}
+  \frametitle{Complexidade Parametrizada da Coloração de Vértices (2/4)}
 
   \begin{beamerboxesrounded}[center,shadow=true]{Teorema}
     \begin{itemize}
@@ -259,7 +264,7 @@
 }
 
 \frame{
-  \frametitle{Complexidade Parametrizada da Coloração de Vértices (3/3)}
+  \frametitle{Complexidade Parametrizada da Coloração de Vértices (3/4)}
 
   \begin{beamerboxesrounded}[center,shadow=true]{Algoritmo Linear para Grafos Cordais}
     \begin{itemize}
@@ -291,6 +296,26 @@
   \note[item]{Portanto, a coloração ótima de um grafo $chordal - ke$ 
     pode ser encontrada em tempo linear em relação ao tamanho da 
     entrada + um fator exponencial em relação ao parâmetro $k$.}
+}
+
+\frame{
+  \frametitle{Complexidade Parametrizada da Coloração de Vértices (4/4)}
+  \begin{beamerboxesrounded}[center,shadow=true]{Colorindo um grafo 
+      $chordal-ke$}
+    \begin{center}
+      $O\left( \frac{4^k}{(k+1)^{\frac{3}{2}}}(m+n)\right)$
+    \end{center}
+  \end{beamerboxesrounded}
+  \vspace{1cm}
+  \pause
+  \begin{beamerboxesrounded}[center,shadow=true]{}
+    A análise de pior caso {\color[rgb]{1,0,0}não} permite a avaliação 
+    do impacto {\color[rgb]{1,0,0}real} do parâmetro $k$ na solução do 
+    problema de Alocação de Comprimentos de Onda 
+  \end{beamerboxesrounded}
+  \note[item]{A fórmula mostra a complexidade do pior caso para o problema.}
+  \note[item]{Porém o pior caso não é suficiente para se avaliar o 
+    impacto da complexidade do problema no mundo real.}
 }
 
 \section{Alocação de Comprimentos de Onda}
@@ -331,34 +356,176 @@
     em topologias genéricas sem restrição no estabelecimento de chamadas.}
 }
 
-\section{Exemplos Numéricos}
+\section{Obtendo o grafo cordal}
+
+\subsection{Definições e Objetivo}
 
 \frame{
-  \frametitle{Complexidade}
-  \begin{beamerboxesrounded}[center,shadow=true]{Colorindo um grafo 
-      $chordal-ke$}
-    \begin{center}
-      $O\left( \frac{4^k}{(k+1)^{\frac{3}{2}}}(m+n)\right)$
-    \end{center}
-  \end{beamerboxesrounded}
+  \frametitle{Definições e Objetivo}
+  As seguintes definições serão usadas:
+  \begin{itemize}
+  \item{$G$: grafo auxiliar}
+  \item{$R$: grafo que define a rede original}
+  \item{buraco: ciclo induzido com mais de 3 vértices}
+  \item{demanda: rota na rede $R$ a ser encontrada}
+  \item{$e$: uma aresta pertencente a $R$}
+  \item{$w(e)$: custo da aresta $e$ na rede $R$}
+  \item{$lower(u,v)$: custo do caminho mínimo de $u$ até $v$}
+  \end{itemize}
   \vspace{1cm}
-  \pause
-  \begin{beamerboxesrounded}[center,shadow=true]{}
-    A análise de pior caso {\color[rgb]{1,0,0}não} permite a avaliação 
-    do impacto {\color[rgb]{1,0,0}real} do parâmetro $k$ na solução do 
-    problema de Alocação de Comprimentos de Onda 
-  \end{beamerboxesrounded}
-  \note[item]{A fórmula mostra a complexidade do pior caso para o problema.}
-  \note[item]{Porém o pior caso não é suficiente para se avaliar o 
-    impacto da complexidade do problema no mundo real.}
+  O objetivo é construir G sempre mantendo este cordal.
 }
 
-\subsection{Cenário}
+\subsection{Teoremas}
+\frame{
+  \frametitle{Teoremas (1/4)}
+  \begin{beamerboxesrounded}[center,shadow=true]{}
+    Usaremos os seguintes teoremas para garantir que o grafo seja 
+    cordal:
+  \end{beamerboxesrounded}
+  \begin{beamerboxesrounded}[center,shadow=true]{Teorema 1}
+    Seja um grafo $G = (V, E)$ da classe cordal. Seja $x$ um novo vértice a
+    ser inserido em $G$ ligando este a outros dois vértices $u$ e $v$ 
+    ($u \in G$ e $v \in G$). Seja $p$ o caminho mínimo entre $u$ e $v$ em 
+    $G$ e seja $G' = (V', E')$, onde $V' = V \cup \{x\}$ e 
+    $E' = E \cup \{(x, u), (x, v)\}$. O único buraco, se houver um, é
+    $p' = (x, u) + p + (x, v)$.
+  \end{beamerboxesrounded}
+  \pause{}
+  \begin{beamerboxesrounded}[center,shadow=true]{Prova:}
+    Como $G$ é cordal, o único possível buraco deve passar por $x$,
+    usando as novas arestas $(x, u)$ e $(x, v)$.
+  \end{beamerboxesrounded}
+  \note[item]{Teoremas 1, 2 e 3 garantem que iremos construir um grafo cordal
+    ao adicionar um novo nó no grafo auxiliar}
+}
 
-\subsection{Resultados}
+\frame{
+  \frametitle{Teoremas (2/4)}
+  \begin{beamerboxesrounded}[center,shadow=true]{}
+    Se realmente houver um buraco em $G'$ faremos uma triangulação 
+    acrescentando arestas entre $x$ e todo vértice de $p' - \{u, v\}$.
+  \end{beamerboxesrounded}
+  \begin{beamerboxesrounded}[center,shadow=true]{Teorema 2}
+    Após a triangularização de $G'$ temos que $G'$ é cordal.
+  \end{beamerboxesrounded}
+  \pause{}
+  \begin{beamerboxesrounded}[center,shadow=true]{Prova:}
+    Pelo Teorema anterior o único buraco possível em $G'$ é 
+    $p' = (x, u) + p + (x, v)$.\\
+    Após a triangulação este buraco é desfeito. Para quaisquer 3 vértices
+    ou mais de $p'$ juntamente com $x$ que formem um ciclo, necessáriamente
+    há uma corda pois $x$ é ligado a todos os vértices de $p'$.\\
+    Quaisquer 4 vértices de $G'$ menos $x$ não podem ter um buraco pois
+    $G$ é cordal.
+  \end{beamerboxesrounded}
+}
 
-\subsection{Conclusões}
+\frame{
+  \frametitle{Teoremas (3/4)}
+  \begin{beamerboxesrounded}[center,shadow=true]{}
+    Agora considere que iremos ligar o vértice $x$ a um outro vértice $t$ de 
+    $G$.
+  \end{beamerboxesrounded}
+  \begin{beamerboxesrounded}[center,shadow=true]{Teorema 3}
+    Seja $G' = (V', E')$ o grafo obtido após a triangulação. Seja 
+    $G'' = (V', E'')$, onde $E'' = E' \cup \{(x, t), p''\}$ e 
+    $p'' = (t, \ldots, z)$ é o caminho mínimo de t até algum vértice
+    $z \in p' - \{x\}$. O único buraco, se houver um, em $G''$ é
+    $p''' = (x, z) + p'' + (x, t)$.
+  \end{beamerboxesrounded}
+  \pause{}
+  \begin{beamerboxesrounded}[center,shadow=true]{Prova:}
+    Como $G$ e $G'$ são cordais, o único possível buraco deve usar
+    a nova aresta $(x, t)$.
+  \end{beamerboxesrounded}
+}
 
+\frame{
+  \frametitle{Teoremas (4/4)}
+  \begin{beamerboxesrounded}[center,shadow=true]{}
+    Se realmente houver um buraco em $G''$ faremos uma triangulação 
+    acrescentando arestas entre $x$ e todo vértice de $p''' - \{z, t\}$.
+  \end{beamerboxesrounded}
+  \vspace{1cm}
+  \begin{beamerboxesrounded}[center,shadow=true]{Teorema 4}
+    Após a triangularização de $G''$ temos que $G''$ é cordal.
+  \end{beamerboxesrounded}
+  \pause{}
+  \vspace{1cm}
+  \begin{beamerboxesrounded}[center,shadow=true]{Prova:}
+    Similar ao Teorema 2.
+  \end{beamerboxesrounded}
+}
+
+\subsection{Encontrando a rota mínima}
+\frame{
+  \frametitle{Encontrando a rota mínima}
+  \begin{itemize}
+  \item{A cada demanda obtemos o grafo $G$ e obtemos o conjunto de arestas
+    usadas na triangulação de $G$, denominado $T$ (modulador)}
+  \item{Devemos achar a rota mínima de $s$ até $t$ com parâmetro $\alpha$
+    e $T$ para calcular as penalizações.}
+  \item{Então a rota mínima pode ser definida como:}
+  \end{itemize}
+  \begin{beamerboxesrounded}[center,shadow=true]{Rota Mínima}
+    \begin{equation}
+      \min_{r}\big( \sum_{e \in r} w(e) + |T| \cdot \alpha \big)
+    \end{equation}
+  \end{beamerboxesrounded}
+  \note[item]{A cada demanda garantimos que o grafo seja cordal usando os 
+    Teoremas 1 e 2.}
+  \note[item]{A cada aresta inserida para manter o grafo cordal é usada
+    como penalização no algoritmo de branch-and-bound usado para encontrar
+    a rota mínima.}
+  \note[item]{A complexidade do algoritmo b&b é exponencial (isto não implica
+    que o algoritmo é ruím na prática. Ex: simplex para pl.}
+}
+
+\subsection[Algoritmo Branch-and-Bound]{Algoritmo Branch-and-Bound para encontrar a rota mínima}
+\frame{
+  \frametitle{Algoritmo Branch-and-Bound (1/2)}
+  \begin{beamerboxesrounded}[center,shadow=true]{Rota Mínima $(s, t)$}
+    \begin{algorithm}[H]
+      \Entrada{Vértice origem s e vértice destino t.}
+      \Saida{Melhor rota.}
+      \BlankLine{}
+      $p \leftarrow s$
+      \tcc*[l]{rota contém inicialmente s}
+      $w \leftarrow 0$
+      \tcc*[l]{custo inicialmente é 0}
+      $Best \leftarrow \{ \infty, \emptyset \}$
+      \tcc*[l]{melhor solução começa com custo $\infty$ e caminho vazio}
+      $Rota(s, t, w, p)$\;
+      \Retorna{$Best$}
+      \label{alg:rota_minima}
+    \end{algorithm}
+  \end{beamerboxesrounded}
+}
+
+\frame{
+  \frametitle{Algoritmo Branch-and-Bound (2/2)}
+  \begin{beamerboxesrounded}[center,shadow=true]{Rota$(s, t, w, p)$}
+    \begin{algorithm}[H]
+      \Entrada{Vértice origem s, vértice destino t, custo atual w e 
+        rota atual p.}
+      \Saida{Melhor rota.}
+      \BlankLine{}
+      \ParaCada{$u \in V(R)$ vizinho de $s$ tal que $u \notin p$}{
+        \eSe{$(u == t)$ e $((w + w(s, t) + \alpha \cdot |T|) < Best)$}{
+          $Best \leftarrow \{(w + w(s, t) + \alpha \cdot |T|), p + (s, t)\}$\;
+        }{
+          \Se{$lower(u,t) + w + w(s, u) < Best$}{
+            $Rota(u, t, w + w(s, u), p + u)$\;
+          }
+        }
+      }
+      \label{alg:rota}
+    \end{algorithm}
+  \end{beamerboxesrounded}
+}
+
+\section{Conclusões}
 \frame{
   \frametitle{Conclusões}
   \begin{itemize}

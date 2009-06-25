@@ -12,6 +12,14 @@
 #include "../include/graph_aux.h"
 #include "../include/parser.h"
 #include "../include/routing.h"
+#include "../include/new_edges.h"
+
+struct modulator {
+	int n;
+	struct new_edges *e;
+};
+
+struct modulator MOD;
 
 /*
  * graph_aux_shortest_path: Determina o caminho mais curto do
@@ -46,7 +54,8 @@ int triangulation(struct graph_aux *G, int new, int s, int t,
  *   - 0 em caso de sucesso das operacoes e 1 cc
  */
 int gen_graph_aux(struct graph_aux *G, struct graph R,
-		  struct request req, float a, const char *fname);
+		  struct request req, float a, const char *fname,
+		  const char *modfile);
 
 #endif
 /* ! HAVE_CHORDAL_H */

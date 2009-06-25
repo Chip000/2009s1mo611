@@ -15,6 +15,7 @@
 
 #define DEBUG 0
 #define TARGET "main"
+#define MODFILE_EXT ".mod"
 
 void display_help(void)
 {
@@ -46,6 +47,7 @@ int main(int argc, char **argv) {
 	char *file_req;
 	char *file_gaux;
 	char *file_out;
+	char *file_gaux_mod;
 
 	float a;
 
@@ -61,6 +63,12 @@ int main(int argc, char **argv) {
 	file_req = argv[3];
 	file_gaux = argv[4];
 	file_out = argv[5];
+
+	file_gaux_mod = (char *) malloc((strlen(basename(file_gaux)) + 
+					 strlen(MODFILE_EXT) + 1) 
+					* sizeof(char));
+
+	sprintf(file_gaux_mod, "%s%s", basename(file_gaux), MODFILE_EXT);
 
 	/* Carregando a topologia na memoria */
 	if (graph_parser(file_top, &G) != 0) {
@@ -91,7 +99,9 @@ int main(int argc, char **argv) {
 		return 1;
 	}
 
-	if (gen_graph_aux(&G_aux, G, req, a, file_out) != 0) {
+	
+
+	if (gen_graph_aux(&G_aux, G, req, a, file_out, file_gaux_mod) != 0) {
 		fprintf(stderr, ">>>ERROR: ");
 		fprintf(stderr, "Erro ao gerar o grafo auxiliar!!\n");
 		return 1;
@@ -103,6 +113,7 @@ int main(int argc, char **argv) {
 	free_graph(G);
 	free_request(req);
 	free_graph_aux(G_aux);
+	free(file_gaux_mod);
 
 	return 0;
 
