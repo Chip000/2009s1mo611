@@ -277,7 +277,7 @@ int add_new_edge_in_gaux(struct graph_aux *G, int u, int v)
 		G->e ++;
 	}
 
-	return 0;
+	return (!((h1 != 0) && (h2 != 0)));
 
 } /* add_new_edge_in_gaux */
 
