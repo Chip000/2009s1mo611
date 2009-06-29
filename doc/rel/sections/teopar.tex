@@ -1,0 +1,25 @@
+\section{Teoria da Complexidade Parametrizada}
+\label{sec:tcpar}
+
+O artigo \cite{DrumFon} introduz um algoritmo para a obtenção de uma 
+solução exata do \wa{} usando a Teoria da Complexidade Parametrizada \cite{Downey}.
+A Teoria da Complexidade Parametrizada foi recentemente proposta e introduz
+a noção de tratabilidade por parâmetro-fixo (FPT) na remodelagem de problemas
+difíceis, removendo a exponenciabilidade da complexidade do problema original.
+
+O problema de coloração ótima para um grafo da classe $F - ke$\footnote{
+  Classe de grafos que pode ser obtida a partir de $F$ removendo no máximo 
+  $k$ arestas} é FPT se o problema de coloração para um grafo da classe $F$
+pode ser resolvido em tempo polinomial e o problema para encontrar um 
+Modulador\footnote{Conjunto de $k$ arestas que, quando adicionados, 
+transformam um grafo $G$ em grafo da classe $F$.} para o grafo da classe 
+$F - ke$ for FPT.
+
+O algoritmo apresentado utiliza o fato que a o problema da coloração 
+mínima de vértices em grafos da classe cordal\footnote{Grafos que não 
+  possuem ciclos induzidos com mais de 3 vértices.} pode ser resolvido 
+em complexidade de tempo linear no número de vértices do grafo. Com isso,
+o algoritmo possui uma complexidade de tempo de 
+$O\left( \frac{4^k}{(k+1)^{\frac{3}{2}}}(m+n)\right)$, que é uma função 
+linear no tamanho da entrada ($n$ e $m$), e uma função exponencial do 
+parâmetro $k$\footnote{Tamanho do Modulador}.

@@ -1,0 +1,102 @@
+\documentclass[letterpaper]{article}
+
+\usepackage[latin1]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage{indentfirst}
+\usepackage{fancyhdr}
+\usepackage[noprefix]{nomencl}
+\usepackage[letterpaper,
+            ps2pdf,
+            pdfborder={0 0 0},
+            colorlinks={false},
+            pdfpagemode={None},
+            pdftitle={},
+            pdfauthor={Victor de Abreu Iizuka et al},
+            pdfsubject={RWA},
+            pdfkeywords={RWA},
+            pdfview={FitBH}]{hyperref}
+\usepackage[T1]{fontenc}
+
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{graphics}
+
+\usepackage[algoruled,portugues,linesnumbered]{algorithm2e}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+\include{include/abaco}
+
+\pagestyle{fancy}
+\addtolength{\headheight}{2pt}
+\fancyhead{}
+\fancyhead[L]{\large{\textsf{Victor de A. I.}}}
+\fancyhead[R]{\textsl{\leftmark}}
+\fancyfoot{}
+\fancyfoot[R]{\small{\textsl{pg. \thepage{} de \pageref{fimdoc}}}}
+\fancyfoot[C]{\small{\textsf{Problema RWA}}}
+\fancyfoot[L]{\small{\textsl{\today}}}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\newcommand{\aspas}[1]{``#1''}
+\newcommand{\estr}[1]{\textsl{\foreignlanguage{american}{#1}}}
+\newcommand{\thead}[1]{\textbf{#1}}
+\newcommand{\sigla}[1]{\texttt{#1}}
+\newcommand{\converter}[2]{\small\textsl{#1 $\pm{}$ #2}\normalsize}
+\newcommand{\rwa}{problema de roteamento e alocação de comprimentos de onda}
+\newcommand{\wa}{problema de alocação de comprimentos de onda}
+\hyphenation{e-xa-ta}
+
+\title{
+  \parbox{1in}{\ABACO{2}{0}{0}{9}{0.8}}
+  \parbox{3in}{
+    \normalsize{
+      Universidade Estadual de Campinas - UNICAMP \\
+      Instituto de Computação - IC 
+    }
+  }
+  \vspace{3cm}\\
+  \hspace{3cm}\\ \hspace{3cm}\\
+  \Large{
+    Algoritmo de roteamento para o problema RWA Parametrizado
+  }\hfill \\
+  \vspace{2cm}
+  % \vspace*{2ex}
+}
+
+\author{
+  \vspace{0.5cm}
+  Victor de Abreu Iizuka  --- RA:046874 \\
+  Prof. Edmundo Roberto Mauro Madeira \\
+  Prof. Nelson Luis Saldanha da Fonseca \\
+  \vspace{1cm}
+}
+
+%\date{}
+
+\begin{document}
+
+\maketitle{}
+\newpage{}
+
+\tableofcontents{}
+\listoftables{}
+\listoffigures{}
+\listofalgorithms{}
+
+\thispagestyle{empty}
+\newpage{}
+
+\input{sections/intro}
+\input{sections/model}
+\input{sections/teopar}
+\input{sections/alg}
+%\input{sections/result}
+\input{sections/conc}
+
+
+\bibliographystyle{plain}
+\bibliography{ra046874}
+
+\label{fimdoc}
+\end{document}

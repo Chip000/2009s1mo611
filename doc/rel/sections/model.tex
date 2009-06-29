@@ -1,0 +1,65 @@
+\section{Modelo}
+\label{subsec:model}
+
+Uma rede óptica pode ser modelada como um grafo $R = (G, V)$ no qual cada
+aresta corresponde a um enlace de fibra. Uma requisição $r = [u, v]$ para
+o estabelecimento de uma nova conexão entre os nós $u$ e $v$ é satisfeita
+se:
+
+\begin{itemize}
+\item{um caminho $p_{r}$ com enlaces pertencentes a $R$ de $u$ a $v$ é 
+  alocado para $r$.}
+\item{um comprimento de onda que carrega a informação através dos enlaces
+  de $p_{r}$ é alocado para $p_{r}$.}
+\end{itemize}
+
+Na solução do problema de RWA, se dois caminhos $p_{r}$ e $p_{r'}$, alocados
+para as requisições $r$ e $r'$, possuírem pelo menos um enlace em comum,
+diferentes comprimentos de onda deveram ser alocadas para cada um dos 
+caminhos. A formulação clássica em redes ópticas transparentes\footnote{
+  Redes que não efetuam conversão óptico-eletrônica.} assume que não há
+conversão de comprimentos de onda.
+
+\subsection{Grafo auxiliar}
+\label{subsubsec:gaux}
+
+Uma forma de modelar o problema de \wa{} em redes transparentes é criar um 
+grafo auxiliar não direcionado no qual cada vértice corresponde a um 
+caminho óptico na rede. Dois vértices são ligados por uma aresta se existir
+pelo menos um enlace óptico compartilhado entre eles. Após a geração do 
+grafo auxiliar, calcula-se uma coloração mínima de vértices de forma que 
+dois vértices adjacentes sempre recebam cores diferentes. No final temos
+que cada caminho óptico possui uma cor, que é mapeada nos respectivos 
+comprimentos de onda.
+
+\begin{figure}
+  \begin{center}
+      \includegraphics[bb=0 0 273 277, width=4cm]{fig/physical_topology-simple.pdf}
+      \includegraphics[bb=0 0 273 277, width=4cm]{fig/virtual_topology-simple.pdf}
+  \end{center}
+
+\caption{Topologia da rede óptica e a sua topologia virtual.}
+\end{figure}
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[bb=0 0 275 275, width=4cm]{fig/auxiliar_graph-simple.pdf}
+    \includegraphics[bb=0 0 275 275, width=4cm]{fig/auxiliar_graph_color-simple.pdf}
+  \end{center}
+
+\caption{Grafo auxiliar e a sua coloração mínima de vértices.}
+\end{figure}
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[bb=0 0 273 277, width=4cm]{fig/virtual_topology_color-simple.pdf}
+    \includegraphics[bb=0 0 273 293, width=4cm]{fig/wavelength_assignment-simple.pdf}
+  \end{center}
+
+\caption{Coloração sobre a Topologia Virtual e a alocação de comprimento de onda correspondente a coloração obtida.}
+\end{figure}
+
+Esta abordagem de coloração de vértices sempre foi usada no desenvolvimento
+de novas soluções para o \wa{} em redes ópticas. Este problema pertence a
+classe dos problemas NP-difícil. Na literatura heurísticas são usadas para 
+a obtenção de soluções rápidas.

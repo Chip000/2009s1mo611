@@ -1,0 +1,105 @@
+\section{Algoritmo}
+\label{sec:alg}
+
+\subsection{Obtendo o Grafo Cordal}
+\label{subsec:gcordal}
+
+Para obter um grafo auxiliar quasi-cordal é necessário evitar uma relação 
+de interferência que forme um ciclo fechado.
+
+Usaremos os seguintes teoremas para garantir que o grafo auxiliar seja
+cordal.
+
+\textbf{Teorema 1:} Seja um grafo $G = (V, E)$ da classe cordal. 
+Seja $x$ um novo vértice a ser inserido em $G$ ligando este a outros 
+dois vértices $u$ e $v$ ($u \in G$ e $v \in G$). Seja $p$ o caminho mínimo 
+entre $u$ e $v$ em $G$ e seja $G' = (V', E')$, onde $V' = V \cup \{x\}$ e 
+$E' = E \cup \{(x, u), (x, v)\}$. O único buraco, se houver um, é
+$p' = (x, u) + p + (x, v)$.
+
+\textbf{Prova:} Como $G$ é cordal, o único possível buraco deve passar 
+por $x$, usando as novas arestas $(x, u)$ e $(x, v)$.
+
+Se realmente houver um buraco em $G'$ faremos uma 
+triangulação acrescentando arestas entre $x$ e todo vértice 
+de $p' - \{u, v\}$.
+
+\textbf{Teorema 2:} Após a triangularização de $G'$ temos que $G'$ é cordal.
+
+\textbf{Prova:} Pelo Teorema anterior o único buraco possível em $G'$ é 
+$p' = (x, u) + p + (x, v)$.\\
+Após a triangulação este buraco é desfeito. Para quaisquer 3 vértices
+ou mais de $p'$ juntamente com $x$ que formem um ciclo, necessáriamente
+há uma corda pois $x$ é ligado a todos os vértices de $p'$.\\
+Quaisquer 4 vértices de $G'$ menos $x$ não podem ter um buraco pois
+$G$ é cordal.
+
+Agora considere que iremos ligar o vértice $x$ a um outro vértice $t$ de 
+$G$.
+
+\textbf{Teorema 3:} Seja $G' = (V', E')$ o grafo obtido após a triangulação. 
+Seja $G'' = (V', E'')$, onde $E'' = E' \cup \{(x, t), p''\}$ e 
+$p'' = (t, \ldots, z)$ é o caminho mínimo de t até algum vértice
+$z \in p' - \{x\}$. O único buraco, se houver um, em $G''$ é
+$p''' = (x, z) + p'' + (x, t)$.
+
+\textbf{Prova:} Como $G$ e $G'$ são cordais, o único possível buraco deve usar
+a nova aresta $(x, t)$.
+
+Se realmente houver um buraco em $G''$ faremos uma triangulação 
+acrescentando arestas entre $x$ e todo vértice de $p''' - \{z, t\}$.
+
+\textbf{Teorema 4:} Após a triangularização de $G''$ temos que $G''$ é cordal.
+
+\textbf{Prova:} Similar ao Teorema 2.
+
+\subsection{Encontrando a Rota Mínima}
+\label{subsec:rota}
+
+A cada demanda obtemos o grafo auxiliar $G$ e obtemos o conjunto de arestas
+usadas na triangulação de $G$, denominado $T$ (modulador).
+Calculamos a a rota mínima de $s$ até $t$ com parâmetro $\alpha$
+e $T$ para calcular as penalizações.
+
+Então a rota mínima pode ser definida como:
+
+\begin{equation}
+  \min_{r}\big( \sum_{e \in r} w(e) + |T| \cdot \alpha \big)
+\end{equation}
+
+Usaremos um algorimo Branch-and-Bound para encontrar a rota mínima usando os
+parâmetros $\alpha$ e $T$ para calcular as penalizações.
+
+\begin{algorithm}[H]
+  \caption{Rota Mínima $(s, t)$}
+  \Entrada{Vértice origem s e vértice destino t.}
+  \Saida{Melhor rota.}
+  \BlankLine{}
+  $p \leftarrow s$
+  \tcc*[l]{rota contém inicialmente s}
+  $w \leftarrow 0$
+  \tcc*[l]{custo inicialmente é 0}
+  $Best \leftarrow \{ \infty, \emptyset \}$
+  \tcc*[l]{melhor solução começa com custo $\infty$ e caminho vazio}
+  $Rota(s, t, w, p)$\;
+  \Retorna{$Best$}\;
+  \label{alg:rota_minima}
+\end{algorithm}
+
+\begin{algorithm}[H]
+  \caption{Rota $(s, t, w, p)$}
+  \Entrada{Vértice origem s, vértice destino t, custo atual w e 
+    rota atual p.}
+  \Saida{Melhor rota.}
+  \BlankLine{}
+  \ParaCada{$u \in V(R)$ vizinho de $s$ tal que $u \notin p$}{
+    \eSe{$(u == t)$ e $((w + w(s, t) + \alpha \cdot |T|) < Best)$}{
+      $Best \leftarrow \{(w + w(s, t) + \alpha \cdot |T|), p + (s, t)\}$\;
+    }{
+      \Se{$lower(u,t) + w + w(s, u) < Best$}{
+        $Rota(u, t, w + w(s, u), p + u)$\;
+      }
+    }
+  }
+  \label{alg:rota}
+\end{algorithm}
