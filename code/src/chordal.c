@@ -152,17 +152,21 @@ int triangulation(struct graph_aux *G, int new, int s, int t,
 	T = 0;
 
 	i = t;
-	while (i != -1) {
+	
+	for (i = 0; i < G->v; i++) {
+	/* while (i != -1) { */
 		/* caso possua buracos adiciona uma aresta a 
 		   cada elemento que pertence ao buraco */
-		if ((ret = add_new_edge_in_gaux(G, new, i)) == 0) {
+		if ((i != new) &&
+		    (prev[i] != new) &&
+		    ((ret = add_new_edge_in_gaux(G, new, i)) == 0)) {
 			T++;
 			if (insert(MOD.e, new, i) == 0) {
 				MOD.n++;
 			}
 		}
 
-		i = prev[i];
+		/* i = prev[i]; */
 	}
 
 	return T;
@@ -244,7 +248,7 @@ int gen_graph_aux(struct graph_aux *G, struct graph R,
 						if (vertex[v] != 0) {
 							add_new_edge_in_gaux(G, new, v);
 
-							graph_aux_shortest_path(G, req.path[r].s, &dist, &prev);
+							graph_aux_shortest_path(G, new, &dist, &prev);
 
 							/* encontra o valor de T */
 							ext_e += triangulation(G, new, u, v, prev);

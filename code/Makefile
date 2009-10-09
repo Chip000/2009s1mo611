@@ -13,7 +13,7 @@ DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 _OBJ = main.o parser.o shortest_path.o struct_route.o routing.o graph_aux.o neighbor.o chordal.o new_edges.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
-CFLAGS=-pedantic -g -Wall -I$(IDIR)
+CFLAGS=-pedantic -g -Wall -I$(IDIR) -m32
 
 .PHONY: all clean
 

@@ -12,6 +12,10 @@ BIB=$(TARGET).bib
 $(PDF): 
 	pdflatex $(TEX)
 	bibtex $(TARGET)
+	bibtex $(TARGET)
+	bibtex $(TARGET)
+	pdflatex $(TEX)
+	bibtex $(TARGET)
 	pdflatex $(TEX)
 	rm -f *~ *.nav *.snm
 	rm -f *.aux *.log *.loa *.bbl *.blg *.lof *.lot 
